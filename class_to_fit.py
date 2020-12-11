@@ -205,18 +205,18 @@ def fit_histo(y_bin = 18):
         dC = h.bin_error
     
         mr = np.linspace(M[0], M[-1], 1000)
-        c = gauss_bt_fit()
-        c.set_fit_list(fit = ['A', 'sigma',   'c0', 'b0'])
-        fit = c.fit(M, C, dC)
-        A_a.append([c.A.value, c.A.err])
-        sigma_a.append([c.sigma.value, c.sigma.err])
-        b0_a.append([c.b0.value, c.b0.err])
-        c0_a.append([c.c0.value, c.c0.err])
+        f = gauss_bt_fit()
+        f.set_fit_list(fit = ['A', 'sigma',   'c0', 'b0'])
+        fit = f.fit(M, C, dC)
+        A_a.append([f.A.value, f.A.err])
+        sigma_a.append([f.sigma.value, f.sigma.err])
+        b0_a.append([f.b0.value, f.b0.err])
+        c0_a.append([f.c0.value, f.c0.err])
         plt.figure()
         h.plot_exp()
-        c.plot_fit()
-        B.plot_line(mr, c.gauss(mr))
-        B.plot_line(mr, c.bkg(mr))
+        f.plot_fit()
+        B.plot_line(mr, f.gauss(mr))
+        B.plot_line(mr, f.bkg(mr))
         
     return    np.array(A_a),  np.array(sigma_a), np.array(b0_a), np.array(c0_a)
     
