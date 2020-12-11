@@ -10,7 +10,7 @@ from mpl_toolkits import mplot3d
 import numpy as np
 import LT.box as B
 import matplotlib.pyplot as plt
-from  class_fit import gauss_bt_fit
+from class_fit import gauss_bt_fit
 
 #%%
 d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_eventsprompt_gluexI.npz')
@@ -54,7 +54,7 @@ def fit_histo(y_bin = 18):
         mr = np.linspace(M[0], M[-1], 1000)
         f = gauss_bt_fit()
         f.set_fit_list(fit = ['A', 'sigma',   'c0', 'b0'])
-        fit = f.fit(M, C, dC)
+        f.fit(M, C, dC)
         A_a.append([f.A.value, f.A.err])
         sigma_a.append([f.sigma.value, f.sigma.err])
         b0_a.append([f.b0.value, f.b0.err])
