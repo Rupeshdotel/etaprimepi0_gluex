@@ -6,11 +6,12 @@ Created on Wed Nov 18 14:20:23 2020
 @author: rupeshdotel
 """
 
-from mpl_toolkits import mplot3d
+#from mpl_toolkits import mplot3d
 import numpy as np
 import LT.box as B
 import matplotlib.pyplot as plt
-from class_fit import gauss_bt_fit
+import class_fit as cf
+#from class_fit import gauss_bt_fit
 
 #%%
 d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_eventsprompt_gluexI.npz')
@@ -52,7 +53,7 @@ def fit_histo(y_bin = 18):
         dC = h.bin_error
     
         mr = np.linspace(M[0], M[-1], 1000)
-        f = gauss_bt_fit()
+        f = cf.gauss_bt_fit()
         f.set_fit_list(fit = ['A', 'sigma',   'c0', 'b0'])
         f.fit(M, C, dC)
         A_a.append([f.A.value, f.A.err])
@@ -70,11 +71,11 @@ def fit_histo(y_bin = 18):
 
 
 #%%
+
+f = cf.gauss_bt_fit()
 x = np.linspace(0,1,1000)
 #plt.plot(x, c.B23(x))
-plt.plot(x, c.B34(x))
-
-
+plt.plot(x, f.B34(x))
 
 #%%
 

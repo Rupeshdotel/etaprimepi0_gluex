@@ -6,11 +6,9 @@ Created on Fri Dec 11 16:34:13 2020
 @author: rupeshdotel
 """
 
-from mpl_toolkits import mplot3d
+
 import numpy as np
 import LT.box as B
-import matplotlib.pyplot as plt
-
 
 
 #%%
@@ -166,4 +164,12 @@ class gauss_bt_fit():
                 continue
             self.fit_list.append(curr_par_name)
         # end of fitting list
+#end of class
+
+#%%
+#if __name__ == "__main__":
+ #  gauss_bt_fit()
+
+
+
         
