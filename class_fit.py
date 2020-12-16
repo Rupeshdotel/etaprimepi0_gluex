@@ -13,33 +13,67 @@ import LT.box as B
 
 #%%
 
-class gauss_bt_fit():
+class gauss_fit():
     
-     def __init__(self, A = 10000., x0 = 0.956, sigma = 0.01,  c0 = 5e4, 
-                  
-                  b0 = 0.14, db0 = 0.50, m0 = 0.86, m1 = 1.025):
+     def __init__(self, A_min = 10., A = 10000.,  A_max = 1e9, 
+                        x0_min = 0.94,    x0 = 0.956, x0_max = 0.98,
+                        sigma_min = 0.005,   sigma = 0.01, sigma_max = 0.30,
+                        c0_min = 10,  c0 = 1e4, c0_max = 5e4, 
+                        b0_min = 10,  b0 = 0.14, b0_max = 0.20, 
+                        db0 = 0.50, 
+                        k0_min = 10,  k0 = 100., k0_max = 500., 
+                        k1_min = 10,  k1 = 100., k1_max = 500., 
+                        m0 = 0.86, m1 = 1.025):
         # peak parameters
+        self.A_min = B.Parameter(A_min, 'A_min')
         self.A = B.Parameter(A, 'A')
+        self.A_max = B.Parameter(A_max, 'A_max')
+        
+        self.x0_min = B.Parameter(x0_min, 'x0_min')
         self.x0 = B.Parameter(x0, 'x0')
+        self.x0_max = B.Parameter(x0_max, 'x0_max')
+        
+        self.sigma_min = B.Parameter(sigma_min, 'sigma_min')
         self.sigma = B.Parameter(sigma, 'sigma')
+        self.sigma_max = B.Parameter(sigma_max, 'sigma_max')
+        
         # back ground parameters
         
+        self.c0_min = B.Parameter(c0_min, 'c0_min')
         self.c0 = B.Parameter(c0, 'c0')
+        self.c0_max = B.Parameter(c0_max, 'c0_max')
         
+        self.b0_min = B.Parameter(b0_min, 'b0_min')
         self.b0 = B.Parameter(b0, 'b0')
+        self.b0_max = B.Parameter(b0_max, 'b0_max')
+        
         self.db0 = B.Parameter(db0, 'db0')
+        
+        self.k0_min = B.Parameter(k0_min, 'k0_min')
+        self.k0 = B.Parameter(k0, 'k0')
+        self.k0_max = B.Parameter(k0_max, 'k0_max')
+        
+        self.k1_min = B.Parameter(k1_min, 'k1_min')
+        self.k1 = B.Parameter(k1, 'k1')
+        self.k1_max = B.Parameter(k1_max, 'k1_max')
+        
         self.m0 = B.Parameter(m0, 'm0')
         self.m1 = B.Parameter(m1, 'm1')
+        
+        
         #self.b1 = B.Parameter(b1, 'b1')
         # fit list, which parameters are to be varied
         self.fit_par = {
         "A" : self.A, 
+        "x0" : self.x0, \
         "sigma":  self.sigma, \
         "c0" : self.c0, \
-        "b0" : self.b0 }
+        "b0" : self.b0, \
+        "k0" : self.k0, \
+        "k1" : self.k1 }
         
         self.set_fit_list()
-        self.fit_list = [self.A,  self.sigma,  self.c0, self.b0]
+        self.fit_list = [self.A, self.x0,  self.sigma,  self.c0, self.b0, self.k0, self.k1 ]
                          #self.b0, self.db0,
                          #self.b2, self.db2]
         
@@ -60,7 +94,7 @@ class gauss_bt_fit():
      
      
      
-     def b34(self, c0, x, m0, m1):
+     def bt_bkg(self,  x):
         self.b1 = self.b0() + self.db0()
         self.a = self.db0()/(self.m1() - self.m0())
         self.b = (self.b1 * self.m0() - self.b0() * self.m1())/(self.m0() - self.m1())
@@ -70,31 +104,50 @@ class gauss_bt_fit():
     
     
      
-     def bkg(self, x):
-        #   bernstein polynomial background
-        y =   self.b34(self.c0, x, self.m0, self.m1) 
+     def lin_bkg(self, x):
+        
+        y = self.k0() + self.k1()*x 
+
         return y
     
      
-     def signal(self,x):
+     def signal_bt_bkg(self, x):
         
-        return self.gauss(x) + self.bkg(x)
+        return self.gauss(x) + self.bt_bkg(x)
+    
+     def signal_lin_bkg(self,x):
+        
+        return self.gauss(x) + self.lin_bkg(x)
 
-     def fit(self, x, y, dy):
+     def fit_gaussbt(self, x, y, dy):
         self.x = x
         self.y = y
         if dy is None:
             self.dy = np.ones_like(y)
         else:
             self.dy = dy
-        if len(self.fit_list) == 3:
-            self.pl = np.array([0.   ,     0.009,       0. ])
-            self.pu = np.array([1e5 ,      0.016,     1e5])
-        if len(self.fit_list) == 4:
-            self.pl = np.array([ 0.   ,     0.008,      0., 0.0 ])
-            self.pu = np.array([ 1e5 ,      0.016,    1e5, 0.2 ])
-        self.fit_res = B.genfit(self.signal, self.fit_list, self.x, self.y,
+        
+        
+        self.pl = np.array([ self.A_min() , self.x0_min(),  self.sigma_min(), self.c0_min(), self.b0_min() ])
+        self.pu = np.array([ self.A_max() , self.x0_max(),  self.sigma_max(), self.c0_max(), self.b0_max() ])
+        
+        self.fit_res = B.genfit(self.signal_bt_bkg, self.fit_list, self.x, self.y,
                                 y_err = self.dy, bounds = (self.pl, self.pu))
+        
+     def fit_gausslin(self, x, y, dy):
+        self.x = x
+        self.y = y
+        if dy is None:
+            self.dy = np.ones_like(y)
+        else:
+            self.dy = dy
+        
+        
+        
+        self.pl = np.array([ self.A_min() , self.x0_min(),  self.sigma_min(), self.k0_min(), self.k1_min()  ])
+        self.pu = np.array([ self.A_max() , self.x0_max(),  self.sigma_max(), self.k0_max(), self.k1_max() ])
+        self.fit_res = B.genfit(self.signal_lin_bkg, self.fit_list, self.x, self.y,
+                            y_err = self.dy, bounds = (self.pl, self.pu))
         
      def plot_fit(self):
         B.plot_line(self.fit_res.xpl, self.fit_res.ypl)
@@ -132,7 +185,7 @@ class gauss_bt_fit():
 
         """
         print("\nCurrent fit list : ", [k.name for k in self.fit_list])
-        print("\nAvailable parameters: [ 'A',  'sigma',  'c0', 'b0']")
+        print("\nAvailable parameters: [ 'A', 'x0',  'sigma',  'c0', 'b0', 'k0', 'k1']")
         
         
      def set_fit_list(self, fit = [ 'A',  'sigma'] ):
@@ -144,9 +197,13 @@ class gauss_bt_fit():
         
            fit = [ 'A', 'sigma']
 
-        to use all parameters::
+        to use bernstien bkg  use parameters::
 
-           h.set_fit_list( fit = [ 'A', 'sigma', 'c0', 'b0'])
+           h.set_fit_list( fit = [ 'A', 'x0',  'sigma', 'c0', 'b0'])
+           
+        to use linear bkg  use parameters::
+
+           h.set_fit_list( fit = [ 'A', 'x0', 'sigma', 'k0', 'k1'])
            
         """
         if fit==[]:

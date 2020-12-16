@@ -53,7 +53,7 @@ def fit_histo(y_bin = 18):
         dC = h.bin_error
     
         mr = np.linspace(M[0], M[-1], 1000)
-        f = cf.gauss_bt_fit()
+        f = cf.gauss_fit()
         f.set_fit_list(fit = ['A', 'sigma',   'c0', 'b0'])
         f.fit(M, C, dC)
         A_a.append([f.A.value, f.A.err])
@@ -72,7 +72,7 @@ def fit_histo(y_bin = 18):
 
 #%%
 
-f = cf.gauss_bt_fit()
+f = cf.gauss_fit()
 x = np.linspace(0,1,1000)
 #plt.plot(x, c.B23(x))
 plt.plot(x, f.B34(x))
