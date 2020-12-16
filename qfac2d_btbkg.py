@@ -125,26 +125,26 @@ C0_value = C0_a[:,0]
 C0_err = C0_a[:,1] 
 
 
-e = cf.gauss_fit()
-e.set_fit_list( fit = ['A', 'x0', 'sigma', 'k0', 'k1'])
+A_fit = cf.gauss_fit()
+A_fit.set_fit_list( fit = ['A', 'x0', 'sigma', 'k0', 'k1'])
 
-e.A.set(2500)
-e.x0.set(0.135)
-e.sigma.set(0.005)
-e.k0.set(0.)
-e.k1.set(0.)
+A_fit.A.set(2500)
+A_fit.x0.set(0.135)
+A_fit.sigma.set(0.005)
+A_fit.k0.set(0.)
+A_fit.k1.set(0.)
 
-e.A_min.set(1000); e.A_max.set(3000)
-e.x0_min.set(0.13); e.x0_max.set(0.14)
-e.sigma_min.set(0.0001); e.sigma_max.set(0.01)
+A_fit.A_min.set(1000); A_fit.A_max.set(3000)
+A_fit.x0_min.set(0.13); A_fit.x0_max.set(0.14)
+A_fit.sigma_min.set(0.0001); A_fit.sigma_max.set(0.01)
 
-e.k0_min.set(-1e5); e.k0_max.set(1e5)
-e.k1_min.set(-1e5); e.k1_max.set(1e5)
+A_fit.k0_min.set(-1e5); A_fit.k0_max.set(1e5)
+A_fit.k1_min.set(-1e5); A_fit.k1_max.set(1e5)
 
-e.fit_gausslin(pi0m, A_value, A_err) # gauss peak with linear bkg
-figure();e.plot_fit()
-B.plot_line(pi0m, e.gauss(pi0m))
-B.plot_line(pi0m, e.lin_bkg(pi0m))
+A_fit.fit_gausslin(pi0m, A_value, A_err) # gauss peak with linear bkg
+plt.figure();A_fit.plot_fit()
+B.plot_line(pi0m, A_fit.gauss(pi0m))
+B.plot_line(pi0m, A_fit.lin_bkg(pi0m))
 B.plot_exp(pi0m, A_a[:,0], A_a[:,1],  plot_title = 'Fit the fit parameter A',  x_label = ' $M(\gamma\gamma)$' )
 
 
@@ -251,17 +251,52 @@ ht2 = B.histo2d(metap[sel], mpi0[sel], range = [[mep_min, mep_max], [mp_min, mp_
     
 #%%
 # for checking 
-i = 4
-figure();
-h_epi0.project_x(bins = [i]).plot_exp()
-F = cf.gauss_fit()
-F.A.set(A_a[i][0])
-F.x0.set(x0_a[i][0])
-F.sigma.set(S_a[i][0])
-F.b0.set(B0_a[i][0])
-F.c0.set(C0_a[i][0])
-mr = np.linspace(mep_min, mep_max, 1000)
-plt.plot(mr, F.signal_bt_bkg(mr))
+
+n = 2
+for i in range(n):
+    
+    F = cf.gauss_fit()
+    
+    # option 1
+    #set the parameter values for each bin in pi0mass that came from the fit
+    F.A.set(A_a[i][0])
+    F.x0.set(x0_a[i][0])
+    F.sigma.set(S_a[i][0])
+    F.b0.set(B0_a[i][0])
+    F.c0.set(C0_a[i][0])
+    mr = np.linspace(mep_min, mep_max, 1000)
+    plt.figure();
+    h_epi0.project_x(bins = [i]).plot_exp()
+    plt.plot(mr, F.signal_bt_bkg(mr))
+    
+    
+    mp0 = pi0m[i]
+    G = cf.gauss_fit()
+    
+    # option 2
+    # set parameter values for each bin in pi0mass calculated from fit functions as a function of pi0mass for that bin
+    
+    Av = A_fit.signal_lin_bkg(mp0)
+    x0v = px0.poly(mp0)
+    sv = pS.poly(mp0)
+    Bv = pB0.poly(mp0)
+    Cv = pC0.poly(mp0)
+    
+    G.A.set(Av)
+    G.x0.set(x0v)
+    G.sigma.set(sv)
+    G.b0.set(Bv)
+    G.c0.set(Cv)
+    plt.figure()
+    h_epi0.project_x(bins = [i]).plot_exp()
+    plt.plot(mr, G.signal_bt_bkg(mr))
+    
+    # compare the fits from option 1 and 2 (should be almost identical)
+
+#%%
+
+
+
 
 
 
