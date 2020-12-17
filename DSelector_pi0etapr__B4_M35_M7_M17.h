@@ -328,6 +328,10 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 
 		TH2F* dHist_pippimetavspi0;
 
+		// extra charged tracks and showers
+		TH1F * dHist_NumExS;
+		TH1F * dHist_NumExT;  
+
 		//tree stuff (variables for qfactor analysis) goes here
 		TFile *fileout; // file for the outputtree
 		TTree *qfactortree; //qfactortree

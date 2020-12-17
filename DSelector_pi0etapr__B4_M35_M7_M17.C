@@ -47,8 +47,8 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
 
 	
 	//declare outputfile and qfactortree
-	fileout = new TFile("qfactortree.root", "Recreate");
-	qfactortree = new TTree("qfactortree", "qfactortree");
+	//fileout = new TFile("qfactortree.root", "Recreate");
+	//qfactortree = new TTree("qfactortree", "qfactortree");
 
 
 	Get_ComboWrappers();
@@ -407,6 +407,10 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
 
 	dHist_pippimetavspi0 = new TH2F("pippimetavspi0", ";M(pippimeta);M(g1g2)", 100, 0.8, 1.6, 100, 0.1, 0.2);
 	
+	// histos for extra showers and charged tracks
+
+	dHist_NumExS = new TH1F("NumExS ", ";Num of ummatched  Showers in the event ( not used in combo)", 10, 0, 10);
+	dHist_NumExT = new TH1F("NumExT ", ";Num of charged particle tracks in the event ( not used in combo)", 5, 0, 5);
 
 
 
@@ -429,7 +433,7 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
 	*/
 
 	// Add branches to the qfactortree
-	qfactortree->Branch("num_combos", &num_combos, "num_combos/I");
+	/*qfactortree->Branch("num_combos", &num_combos, "num_combos/I");
 	qfactortree->Branch("pi0mass", &pi0mass, "pi0mass/D");
 	qfactortree->Branch("etaprimemass", &etaprimemass, "etaprimemass/D");
 	qfactortree->Branch("etaprimepi0mass", &etaprimepi0mass, "etaprimemasspi0/D");
@@ -451,7 +455,7 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
 
 	qfactortree->Branch("etamass", &etamass, "etamass/D");
 	qfactortree->Branch("BEa", &BEa, "BEa/D");
-	
+	*/
 
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - FLAT TREE *************************/
@@ -1014,6 +1018,13 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		double tr_pi0mass = locMassPhoton12;
 
+		// get info about extra charged tracks and showers
+
+		double NumUnusedShowers  = dComboWrapper->Get_NumUnusedShowers();
+
+		//cout << "NumUnusedShowers" << NumUnusedShowers << endl;
+		double NumUnusedTracks = dComboWrapper->Get_NumUnusedTracks();
+
 		// Assign values to the previously defined variables for qfactortree
 		num_combos =  Get_NumCombos();
 		combo_number = loc_i;
@@ -1091,7 +1102,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			
 			
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut && locAccid)
-			if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
+			if  (MissingMassSquaredcut && coherentbeam ) // && FCAL_showerqualitycut) //accidental study
 			{
 
 			//1-D photon pairs kinfitted variables
@@ -1264,9 +1275,10 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 
 					//Fill the qfactortree
-					 qfactortree->Fill(); 
+					// qfactortree->Fill(); 
 					
-					 
+			dHist_NumExS->Fill(NumUnusedShowers);
+			dHist_NumExT->Fill(NumUnusedTracks);
 					    
 				
 
@@ -1415,10 +1427,10 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Finalize(void)
 
 	//DO YOUR STUFF HERE
 
-	fileout->cd(); 
-	qfactortree->Write();
+	//fileout->cd(); 
+	//qfactortree->Write();
 
-	fileout->Close();
+	//fileout->Close();
 	
 
 	
