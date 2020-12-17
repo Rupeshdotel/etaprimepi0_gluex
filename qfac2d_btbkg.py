@@ -109,31 +109,24 @@ def fit_histo(h2d):
 A_a, x0_a, S_a, B0_a, C0_a = fit_histo(h_epi0)    
 
 #%%
-A_value = A_a[:,0] 
-A_err = A_a[:,1] 
-
-x0_value = x0_a[:,0] 
-x0_err = x0_a[:,1] 
-
-S_value = S_a[:,0] 
-S_err = S_a[:,1] 
-
-B0_value = B0_a[:,0] 
-B0_err = B0_a[:,1] 
-
-C0_value = C0_a[:,0] 
-C0_err = C0_a[:,1] 
+A_value = A_a[:,0] ; A_err = A_a[:,1] 
+x0_value = x0_a[:,0] ; x0_err = x0_a[:,1] 
+S_value = S_a[:,0] ; S_err = S_a[:,1] 
+B0_value = B0_a[:,0]  ; B0_err = B0_a[:,1] 
+C0_value = C0_a[:,0]  ; C0_err = C0_a[:,1] 
 
 
 A_fit = cf.gauss_fit()
 A_fit.set_fit_list( fit = ['A', 'x0', 'sigma', 'k0', 'k1'])
 
+# set parameters for combined gaussian linear fit 
 A_fit.A.set(2500)
 A_fit.x0.set(0.135)
 A_fit.sigma.set(0.005)
 A_fit.k0.set(0.)
 A_fit.k1.set(0.)
 
+#set bounds for  combined gaussian linear fit 
 A_fit.A_min.set(1000); A_fit.A_max.set(3000)
 A_fit.x0_min.set(0.13); A_fit.x0_max.set(0.14)
 A_fit.sigma_min.set(0.0001); A_fit.sigma_max.set(0.01)
@@ -141,11 +134,11 @@ A_fit.sigma_min.set(0.0001); A_fit.sigma_max.set(0.01)
 A_fit.k0_min.set(-1e5); A_fit.k0_max.set(1e5)
 A_fit.k1_min.set(-1e5); A_fit.k1_max.set(1e5)
 
-A_fit.fit_gausslin(pi0m, A_value, A_err) # gauss peak with linear bkg
+A_fit.fit_gausslin(pi0m, A_value, A_err) # fit gauss peak with linear bkg
 plt.figure();A_fit.plot_fit()
 B.plot_line(pi0m, A_fit.gauss(pi0m))
 B.plot_line(pi0m, A_fit.lin_bkg(pi0m))
-B.plot_exp(pi0m, A_a[:,0], A_a[:,1],  plot_title = 'Fit the fit parameter A',  x_label = ' $M(\gamma\gamma)$' )
+B.plot_exp(pi0m, A_value, A_err,  plot_title = 'Fit the fit parameter A',  x_label = ' $M(\gamma\gamma)$' )
 
 
 plt.figure()
