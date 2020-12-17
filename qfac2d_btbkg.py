@@ -47,7 +47,7 @@ chisq_ndf = d['chisq_ndf_unique']
 mep_bins = 18 # bins etaprime invariant mass
 mp_bins = 18 # bins pi0 invariant mass
 mep_min = 0.86 # left edge of etaprime invariant mass
-mep_max = 1.06 # right edge of etaprime invariant mass
+mep_max = 1.04 # right edge of etaprime invariant mass
 mp_min = 0.12 # left edge of pi0 invariant mass
 mp_max = 0.15 # right edge of pi0 invariant mass
 h_epi0 = B.histo2d( metap, mpi0, bins = (mep_bins, mp_bins),
@@ -172,32 +172,40 @@ B.plot_exp(pi0m, C0_value,  C0_err, plot_title = 'Fit the fit parameter $c0$', x
 B.plot_line(pC0.xpl, pC0.ypl)
 
 #%%
-def bkg_fit(x,y):
+def bkg_fit(x,y): # x as etaprime mass and y as pi0mass
     
-    #f = cf.gauss_bt_fit()
+    f = cf.gauss_fit()
     #y = f.b34(pC0.poly(y), x, 0.86, 1.04)
-    b0 = pB0.poly(y)
+    f.b0.set(pB0.poly(y))
     
-    db0 = 0.50
-    m1 = 1.04
-    m0 = 0.86
-    b1 = b0 + db0
+    f.db0.set(0.50)
+    
+    #f.b1.set(b0 + db0)
     
     
-    a = db0/(m1 - m0)
+    #a = f.db0()/(f.m1() - f.m0())
     #b = (self.b1 * self.m0() - self.b0() * self.m1())/(self.m0() - self.m1())
-    b = (b1 * m0 - b0 * m1) / (m0 - m1)
-    X = a * x + b
-    Y = 4 * X**3 * (1 - X)
-    return   pC0.poly(y)  * Y
+    #b = (f.b1 * f.m0() - f.b0() * f.m1()) / (f.m0() - f.m1())
+    #X = a * x + b
+    #Y = 4 * X**3 * (1 - X)
+    f.c0.set(pC0.poly(y))
+    Y = f.bt_bkg(x)
+    return   Y
     
 
-def peak_fit(x,y):
-    A = fit_Aa.func(y)
-    mean = px0.poly(y)
-    sigma = pS.poly(y)
-    y = A*np.exp(-0.5*((x-mean)/sigma)**2)
-    return y
+def peak_fit(x,y): # x as etaprime mass and y as pi0mass
+    
+    g = cf.gauss_fit()
+    
+    g.A.set(A_fit.signal_lin_bkg(y))
+    g.x0.set(px0.poly(y))
+    g.sigma.set(pS.poly(y))
+    #A = A_fit.signal_lin_bkg(y)
+    #mean = px0.poly(y)
+    #sigma = pS.poly(y)
+    #y = A*np.exp(-0.5*((x-mean)/sigma)**2)
+    Y = g.gauss(x)
+    return Y
 
 
 def signal_fit(x,y):

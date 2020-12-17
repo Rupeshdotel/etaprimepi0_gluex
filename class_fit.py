@@ -23,7 +23,7 @@ class gauss_fit():
                         db0 = 0.50, 
                         k0_min = 10,  k0 = 100., k0_max = 500., 
                         k1_min = 10,  k1 = 100., k1_max = 500., 
-                        m0 = 0.86, m1 = 1.025):
+                        m0 = 0.86, m1 = 1.04):
         # peak parameters
         self.A_min = B.Parameter(A_min, 'A_min')
         self.A = B.Parameter(A, 'A')
