@@ -1,4 +1,4 @@
-#include "DSelector_pi0etapr__B4_M35_M7_M17.h"
+#include "DSelector_pi0etapr__B4_M35_M7_M17.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -11,7 +11,7 @@ using namespace std;
 
 
 
-void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
+void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope) is used to define a func outside a class in cpp
 {
 	// USERS: IN THIS FUNCTION, ONLY MODIFY SECTIONS WITH A "USER" OR "EXAMPLE" LABEL. LEAVE THE REST ALONE.
 
@@ -451,7 +451,15 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree)
 
 	qfactortree->Branch("etamass", &etamass, "etamass/D");
 	qfactortree->Branch("BEa", &BEa, "BEa/D");
+
+	qfactortree->Branch("pi0mass13", &pi0mass13, "pi0mass13/D");
+	qfactortree->Branch("pi0mass24", &pi0mass24, "pi0mass24/D");
+	qfactortree->Branch("pi0mass14", &pi0mass14, "pi0mass14/D");
+	qfactortree->Branch("pi0mass23", &pi0mass23, "pi0mass23/D");
+
+	qfactortree->Branch("num_unusedshowers", &num_unusedshowers, "num_unusedshowers/I");
 	
+	qfactortree->Branch("mant", &mant, "mant/D");
 
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - FLAT TREE *************************/
@@ -626,6 +634,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		//Step 0
 		TLorentzVector locBeamP4 = dComboBeamWrapper->Get_P4();
 		double BE = locBeamP4.E();
+
 		TLorentzVector locProtonP4 = dProtonWrapper->Get_P4();
 		//Step 1
 		TLorentzVector locPhoton1P4 = dPhoton1Wrapper->Get_P4();
@@ -720,6 +729,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		TLorentzVector t_Pi0P4 = locBeamP4 - locPhoton1P4 - locPhoton2P4;
 		TLorentzVector t_EtaPrimeP4 = locBeamP4 - locetaprime;
+
+		TLorentzVector tP4 = locBeamP4 - locetaprimepi0;
 
 		
 
@@ -1012,7 +1023,12 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		double t_pi0 = (-1)*t_Pi0P4.M2();
 		double t_EtaPrime = (-1)*t_EtaPrimeP4.M2();
 
+		double t = (-1)*tP4.M2();
+
 		double tr_pi0mass = locMassPhoton12;
+
+		// get extra showers
+		double NumUnusedShowers  = dComboWrapper->Get_NumUnusedShowers();
 
 		// Assign values to the previously defined variables for qfactortree
 		num_combos =  Get_NumCombos();
@@ -1043,8 +1059,16 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		chisq_ndf = chisq/ndf;                     //cout << chisq_ndf << "chisq/ndf" << endl;
 		event_num = Get_EventNumber();
 
+		// variables for 2pi0 , t and extra showers cut experimentation
 
+		pi0mass13 = locMassPhoton13;
+		pi0mass24 = locMassPhoton24;
+		pi0mass14 = locMassPhoton14;
+		pi0mass23 = locMassPhoton23;
 
+		num_unusedshowers = NumUnusedShowers;
+		mant = t;
+		
 
 		//Uniqueness tracking: Build the map of particles used for the missing mass
 			//For beam: Don't want to group with final-state photons. Instead use "Unknown" PID (not ideal, but it's easy).
@@ -1146,10 +1170,10 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 			
 			// 2pi0 veto 
-			if (!(pi013 && pi024 && pi014 && pi023))
+			//if (!(pi013 && pi024 && pi014 && pi023))
 			
 			
-			{
+			//{
 				
 				
 
@@ -1285,7 +1309,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 					
 				} // pi0 and eta mass window ends here
-			} // 2 pi0 veto ends here
+			//} // 2 pi0 veto ends here
 			
 			/****************** Display 2pi0 events  **********************/
 

@@ -15,17 +15,20 @@ using namespace std;
 #include "TCanvas.h"
 #include "TTree.h"
 
-class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
+// inheritance (DSelector_pi0etapr__B4_M35_M7_M17 is the derived class of  the base class DSelector)
+// class DSelector_pi0etapr__B4_M35_M7_M17 or its instance enjoys all methods and attributes of base class DSelector
+
+class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector 
 {
 	public:
 
-		DSelector_pi0etapr__B4_M35_M7_M17(TTree* locTree = NULL) : DSelector(locTree){}
+		DSelector_pi0etapr__B4_M35_M7_M17(TTree* locTree = NULL) : DSelector(locTree){} // initializing the DSelector class in the constructor
 		virtual ~DSelector_pi0etapr__B4_M35_M7_M17(){}
 
 		void Init(TTree *tree);
 		Bool_t Process(Long64_t entry);
 	
-
+  //private members of a class are accessible only from within other members of the same class or from their friends.
 	private:
 
 		void Get_ComboWrappers(void);
@@ -360,16 +363,25 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Double_t BEa;
 		
 
-		
-		
+		// save variables for cut experimentation of 2pi0, t and extra showers
 
 
+		Double_t  pi0mass13;
+		Double_t  pi0mass24;
+		Double_t  pi0mass14;
+		Double_t  pi0mass23;
+
+		Int_t num_unusedshowers;
+
+		Double_t mant;
 
 	ClassDef(DSelector_pi0etapr__B4_M35_M7_M17, 0);
 };
 
 void DSelector_pi0etapr__B4_M35_M7_M17::Get_ComboWrappers(void)
 {
+
+	// static cast converts pointer of baseclass to pointer of derived class (static_cast<int>(3.14) = 3)
 	//Step 0
 	dStep0Wrapper = dComboWrapper->Get_ParticleComboStep(0);
 	dComboBeamWrapper = static_cast<DBeamParticle*>(dStep0Wrapper->Get_InitialParticle());
