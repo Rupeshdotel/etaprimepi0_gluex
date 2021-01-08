@@ -51,8 +51,8 @@ def find_duplicates(np_array, get_value_index = False):
     
 #%%
 
-f = np.load('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/new_eventsprompt_gluexI.npz')
-#f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_gluexI.npz')
+f = np.load('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/new_eventsprompt_17.npz')
+#f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz')
 
 #i = 100
 event_num = f['event_num'][:]
@@ -83,6 +83,11 @@ pi0phiGJ = f['pi0phiGJ'][:]
 
 etaprimecosthetaGJ = f['etaprimecosthetaGJ'][:]
 etaprimephiGJ = f['etaprimephiGJ'][:]
+
+photon1_sq = f['photon1_sq'][:]
+photon2_sq = f['photon2_sq'][:]
+photon3_sq = f['photon3_sq'][:]
+photon4_sq = f['photon4_sq'][:]
 
 #%%
 
@@ -121,9 +126,14 @@ pi0phiGJ = pi0phiGJ[vil]
 etaprimecosthetaGJ = etaprimecosthetaGJ[vil]
 etaprimephiGJ = etaprimephiGJ[vil]
 
+photon1_sq = photon1_sq[vil]
+photon2_sq = photon2_sq[vil]
+photon3_sq = photon3_sq[vil]
+photon4_sq = photon4_sq[vil]
+
 
 #%%
-np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/unique_new_eventspromt_gluexI.npz',
+np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/unique_new_eventspromt_17.npz',
          
          
             event_num = event_num,
@@ -153,7 +163,17 @@ np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_1
             pi0phiGJ = pi0phiGJ,
             
             etaprimecosthetaGJ = etaprimecosthetaGJ,
-            etaprimephiGJ = etaprimephiGJ)
+            etaprimephiGJ = etaprimephiGJ,
+            
+            photon1_sq = photon1_sq,
+            photon2_sq = photon2_sq,
+            photon3_sq = photon3_sq,
+            photon4_sq = photon4_sq
+            
+            
+            
+            
+            )
 
 
 

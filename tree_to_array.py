@@ -11,7 +11,8 @@ import ROOT as R
 from root_numpy import tree2array
 #%%
 
-rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree.root")
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree_17.root")
+
 intree = rfile.Get('qfactortree')
 
 #%%
@@ -49,8 +50,13 @@ pi0phiGJ = array['pi0phiGJ']
 etaprimecosthetaGJ = array['etaprimecosthetaGJ']
 etaprimephiGJ = array['etaprimephiGJ']
 
+photon1_sq = array['photon1_sq']
+photon2_sq = array['photon2_sq']
+photon3_sq = array['photon3_sq']
+photon4_sq = array['photon4_sq']
+
 #%%
-np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_gluexI.npz', 
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz', 
          
          
         event_num = event_num,
@@ -80,5 +86,12 @@ np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_ev
         pi0phiGJ = pi0phiGJ,
         
         etaprimecosthetaGJ = etaprimecosthetaGJ,
-        etaprimephiGJ = etaprimephiGJ 
+        etaprimephiGJ = etaprimephiGJ, 
+        
+        photon1_sq = photon1_sq,
+        photon2_sq = photon2_sq,
+        photon3_sq = photon3_sq,
+        photon4_sq = photon4_sq
+        
+        
         )

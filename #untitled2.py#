@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jan  6 10:28:26 2021
+
+@author: rupeshdotel
+"""
+
+import numpy as np
+import ROOT as R
+from root_numpy import tree2array
+import LT.box as B
+
+#%%
+
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/gluexgit/test/qfactortree1.root")
+intree = rfile.Get('qfactortree')
+d = tree2array(intree)
+
+
+
+event_num = d['event_num']
+kinfit_CL = d['kinfit_CL']
+chisq_ndf = d['chisq_ndf']
+num_combos = d['num_combos']
+combo_number = d['combo_number']
+mpi0 = d['pi0mass']
+meta = d['etamass']
+metap = d['etaprimemass']
+
+metappi0 = d['etaprimepi0mass']
+
+mpi013 = d['pi0mass13']
+mpi024 = d['pi0mass24']
+mpi014 = d['pi0mass14']
+mpi023 = d['pi0mass23']
+
+
+
+cost_pi0 = d['pi0costhetaGJ']
+pi0phiGJ = d['pi0phiGJ']
+
+cost_etap = d['etaprimecosthetaGJ']
+etaprimephiGJ = d['etaprimephiGJ']
+
+
+
+#%%
+#2pi0 veto
+twopi0veto_min = 0.12; twopi0veto_max = 0.15
+mpi013_min = twopi0veto_min; mpi013_max = twopi0veto_max
+mpi024_min = twopi0veto_min; mpi024_max = twopi0veto_max
+mpi014_min = twopi0veto_min; mpi014_max = twopi0veto_max
+mpi023_min = twopi0veto_min; mpi023_max = twopi0veto_max
+
+
+
+
+ 
+
+         
+        
+sel_pi0veto =    ((((mpi013_min <  mpi013) &  (mpi013  < mpi013_max))) \
+         &   (((mpi024_min <  mpi024) &  (mpi024  < mpi024_max)))) \
+         |   ((((mpi014_min <  mpi014) &  (mpi014  < mpi014_max))) \
+         &   (((mpi023_min <  mpi023) &  (mpi023  < mpi023_max))) )
+         
+
+
+
+metappi0[~sel_pi0veto].shape
+
+pi013 = B.in_between(twopi0veto_min, twopi0veto_max, mpi013)
+pi024 = B.in_between(twopi0veto_min, twopi0veto_max, mpi024)
+pi014 = B.in_between(twopi0veto_min, twopi0veto_max, mpi014)
+pi023 = B.in_between(twopi0veto_min, twopi0veto_max, mpi023)
+
+veto = ~ ( (pi013 & pi024) | (pi014 & pi023) )
+
+metappi0[veto].shape
+
+#pi0window
+mpi0_min = 0.08; mpi0_max = 0.18
+pi0 = B.in_between(mpi0_min, mpi0_max,  mpi0)
+
+
+#etawindow
+meta_min = 0.48; meta_max = 0.60
+eta = B.in_between(meta_min, meta_max,  meta)
+
+
+#etaprimewindow
+metap_min = 0.85; metap_max = 1.05
+etap = B.in_between(metap_min, metap_max,  metap)
+
+
+sel_win = ((mpi0_min <  mpi0) &  (mpi0  < mpi0_max)) \
+        & ((meta_min < meta) & (meta < meta_max)) \
+        & ((metap_min < metap) & (metap < metap_max))
+
+sel = veto & sel_win
+
+
+
+
+
+OB

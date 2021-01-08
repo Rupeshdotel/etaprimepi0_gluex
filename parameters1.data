@@ -1,0 +1,33 @@
+#cut values 1
+twopi0veto_min = 0.11
+twopi0veto_max = 0.17
+
+#pi0window
+mpi0_min = 0.12
+mpi0_max = 0.15
+
+#etawindow
+meta_min = 0.48
+meta_max = 0.60
+
+
+#etaprimewindow
+metap_min = 0.86
+metap_max = 1.05
+
+
+#possible baryons
+mpipp_min = 1.35
+mpi0p_min = 1.35
+
+#omega window to be rejected
+momega_min = 0.75
+momega_max = 0.85
+
+#maximum allowed  extra showers (optimum value from FOM is 3 (excludes upperbound))
+n_maxextrashowers = 3 
+
+#maximum mandlestam t allowed (not sure if I need to cut on this )
+mant_max = 10.0 
+
+

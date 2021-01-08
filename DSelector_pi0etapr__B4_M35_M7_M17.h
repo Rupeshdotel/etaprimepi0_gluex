@@ -365,6 +365,8 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 
 		// save variables for cut experimentation of 2pi0, t and extra showers
 
+		Double_t etapi0mass; 
+		
 
 		Double_t  pi0mass13;
 		Double_t  pi0mass24;
@@ -374,6 +376,11 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Int_t num_unusedshowers;
 
 		Double_t mant;
+
+		Double_t photon1_sq;
+		Double_t photon2_sq;
+		Double_t photon3_sq;
+		Double_t photon4_sq;
 
 	ClassDef(DSelector_pi0etapr__B4_M35_M7_M17, 0);
 };

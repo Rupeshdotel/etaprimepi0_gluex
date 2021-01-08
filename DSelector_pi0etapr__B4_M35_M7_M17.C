@@ -457,9 +457,16 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	qfactortree->Branch("pi0mass14", &pi0mass14, "pi0mass14/D");
 	qfactortree->Branch("pi0mass23", &pi0mass23, "pi0mass23/D");
 
+	qfactortree->Branch("etapi0mass", &etapi0mass, "etapi0mass/D");
+
 	qfactortree->Branch("num_unusedshowers", &num_unusedshowers, "num_unusedshowers/I");
 	
 	qfactortree->Branch("mant", &mant, "mant/D");
+
+	qfactortree->Branch("photon1_sq", &photon1_sq, "photon1_sq/D");
+	qfactortree->Branch("photon2_sq", &photon2_sq, "photon2_sq/D");
+	qfactortree->Branch("photon3_sq", &photon3_sq, "photon3_sq/D");
+	qfactortree->Branch("photon4_sq", &photon4_sq, "photon4_sq/D");
 
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - FLAT TREE *************************/
@@ -1061,6 +1068,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		// variables for 2pi0 , t and extra showers cut experimentation
 
+		etapi0mass = locMassetapi0;
+
 		pi0mass13 = locMassPhoton13;
 		pi0mass24 = locMassPhoton24;
 		pi0mass14 = locMassPhoton14;
@@ -1069,6 +1078,13 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		num_unusedshowers = NumUnusedShowers;
 		mant = t;
 		
+		photon1_sq = photon1_shower_quality;
+		photon2_sq = photon2_shower_quality;
+		photon3_sq = photon3_shower_quality;
+		photon4_sq = photon4_shower_quality;
+		
+
+
 
 		//Uniqueness tracking: Build the map of particles used for the missing mass
 			//For beam: Don't want to group with final-state photons. Instead use "Unknown" PID (not ideal, but it's easy).
@@ -1114,9 +1130,14 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			Bool_t aboveomega = (locMassomega > 0.85);
 			
 			
-			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut && locAccid)
-			if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
+			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut && !locAccid)
+			if  (MissingMassSquaredcut && coherentbeam  && !locAccid)
+			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
 			{
+
+			// Fill the qfactor tree	
+			qfactortree->Fill(); 
+
 
 			//1-D photon pairs kinfitted variables
  
@@ -1170,10 +1191,11 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 			
 			// 2pi0 veto 
-			//if (!(pi013 && pi024 && pi014 && pi023))
+			//if (!((pi013 && pi024) || (pi014 && pi023)))
 			
 			
 			//{
+				//qfactortree->Fill(); 
 				
 				
 
@@ -1201,9 +1223,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			
 			/*************************  etapi0 mass window  **********************/
 				
-			if (etapi0masswindow)
+			//if (etapi0masswindow)
 
-			{
+			//{
 					
 			
 			dHist_pi0costheta_GJ->Fill(cosThetapi0_GJ);
@@ -1279,16 +1301,18 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			dHist_pippimeta->Fill(locMassetaprime);	
 			
 			//select etaprime events 
-			if (etaprimemasswindow) 
-			{dHist_etaprimepi0->Fill(locEtaPrimePi0P4mass);
-			dHist_InvMetapvcostheta->Fill(locEtaPrimePi0P4mass, costhetaetaprime_GJ);}
+			//if (etaprimemasswindow) 
+			//{
+				dHist_etaprimepi0->Fill(locEtaPrimePi0P4mass);
+			dHist_InvMetapvcostheta->Fill(locEtaPrimePi0P4mass, costhetaetaprime_GJ);
 
 			
 			dHist_NumNeutrals_omegaveto_prompt->Fill(num_neutrals);
 
 
 					//Fill the qfactortree
-					 qfactortree->Fill(); 
+					 //qfactortree->Fill(); 
+			//} //etaprime mass window closes
 					
 					 
 					    
@@ -1308,7 +1332,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 				dHist_Metaprimepi0vt_pi0->Fill(locMassetaprimepi0, t_pi0);
 
 					
-				} // pi0 and eta mass window ends here
+				//} // pi0 and eta mass window ends here
 			//} // 2 pi0 veto ends here
 			
 			/****************** Display 2pi0 events  **********************/
