@@ -9,6 +9,8 @@ Created on Wed Jan  6 10:28:26 2021
 import numpy as np
 import LT.box as B
 
+import class_fit as cf
+import matplotlib.pyplot as plt
 #%%
 
 #load the npz data file
@@ -55,7 +57,7 @@ num_unusedshowers = d['num_unusedshowers']
 
 #%%
 # read the parameters data file 
-c_par = B.LT.parameterfile.pfile('parameters2.data')
+c_par = B.LT.parameterfile.pfile('parameters5.data')
 
 # load the parameters values
 mpi0_min = c_par.get_value('mpi0_min'); mpi0_max =  c_par.get_value('mpi0_max') 
@@ -92,12 +94,17 @@ showerqual_2 =   B.in_between(sq_min, sq_max,  photon2_sq)
 showerqual_3 =   B.in_between(sq_min, sq_max,  photon3_sq)
 showerqual_4 =   B.in_between(sq_min, sq_max,  photon4_sq)
 
-quality_photons = showerqual_1 & showerqual_2 & showerqual_3 & showerqual_4
-
 ex_showers = B.in_between(extrashowers_min, extrashowers_max, num_unusedshowers) # extra showers window
 
-#combine selection windows
+
+#events that have all photons > 0.5 for shower quality variable
+quality_photons = showerqual_1 & showerqual_2 & showerqual_3 & showerqual_4
+
+#combine selection windows in increasing complexity
+#sel_win = pi0 & eta & etap
+#sel_win = pi0 & eta & etap & t
 sel_win = pi0 & eta & etap & t & quality_photons
+#sel_win = pi0 & eta & etap & t & quality_photons & ex_showers
 
 #choose 2pi0 veto logic
 veto_2pi0 = ~ ( (pi013 & pi024) | (pi014 & pi023) )
@@ -105,12 +112,12 @@ veto_2pi0 = ~ ( (pi013 & pi024) | (pi014 & pi023) )
 #veto omega
 veto_omega = ~(omega)
 
-# combine vetos
+# combine vetos in increasing complexity
+#veto = veto_2pi0
 veto = veto_2pi0 & veto_omega
 
 # combine veto and selection windows
 sel =  sel_win &  veto 
-
 
 #%%
 #define histograms
@@ -141,6 +148,14 @@ h2_14_23 = B.histo2d(mpi014, mpi023, range = [[0.08, 0.20], [0.08, 0.20]],  bins
                        title = "pi0 pi0 events",
                xlabel = "$M(\gamma_{1}\gamma_{4})$", ylabel = "$M(\gamma_{2}\gamma_{3})$")
 
+h_omega = B.histo(mpippimpi0[sel],  bins = 40,  range = [0.5, 1.5], title = "$\omega$",
+               xlabel = "$M(\pi^{+}\pi^{-}\pi^{0})$")
+
+
+h2_omega = B.histo2d(mpippimpi0[sel], metap[sel], range = [[0.5, 1.5], [0.9, 1.05]],  bins = ( 40, 40 ),
+                       title = "pi0 pi0 events",
+               xlabel = "$M(\gamma_{1}\gamma_{3})$", ylabel = "$M(\gamma_{2}\gamma_{4})$")
+
 
 h_t = B.histo(mant[sel],  bins = 40, range = [0, 4],  title = "mometum transfer",
                xlabel = "t")
@@ -153,3 +168,111 @@ h_pipp = B.histo(mpipp[sel],  bins = 24, title = "$\pi^{+}p$",
 
 h_us = B.histo(num_unusedshowers[sel],  range = [-0.5, 11.5], bins = 12, title = "Unused showers",
                xlabel = "Number of unused showers")
+
+h_sq = B.histo(photon1_sq[sel],  range = [0, 1], bins = 24, title = "Photon1 shower quality",
+               xlabel = "Shower quality")
+
+
+#%%
+
+plt.figure();h_pi0.plot_exp()
+plt.figure();h_eta.plot_exp()
+plt.figure();h_etap.plot_exp()
+plt.figure();h_etappi0.plot_exp()
+plt.figure();h2_ep_cost.plot()
+
+
+
+#%%
+
+"""
+
+#get the variables as numpy arrays
+event_num = event_num[sel]
+kinfit_CL = kinfit_CL[sel]
+chisq_ndf = chisq_ndf[sel]
+num_combos = num_combos[sel]
+combo_number = combo_number[sel]
+mpi0 = mpi0[sel]
+meta = meta[sel]
+metap = metap[sel]
+
+metappi0 = metappi0[sel]
+
+mpipp = mpipp[sel]
+mpi0p = mpi0p[sel]
+mpippimpi0 = mpippimpi0[sel]
+
+cost_pi0 = cost_pi0[sel]
+pi0phiGJ = pi0phiGJ[sel]
+
+cost_etap = cost_etap[sel]
+etaprimephiGJ = etaprimephiGJ[sel]
+
+#new variables
+
+mpi013 = mpi013[sel]
+mpi024 = mpi024[sel]
+mpi014 = mpi014[sel]
+mpi023 = mpi023[sel]
+
+photon1_sq = photon1_sq[sel]
+photon2_sq = photon2_sq[sel]
+photon3_sq = photon3_sq[sel]
+photon4_sq = photon4_sq[sel]
+
+mant = mant[sel]
+num_unusedshowers = num_unusedshowers[sel]
+
+
+
+
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events.npz',
+         
+         
+            event_num = event_num,
+            kinfit_CL = kinfit_CL,
+            chisq_ndf = chisq_ndf,
+            num_combos = num_combos,
+            combo_number = combo_number,
+            mpi0 = mpi0,
+            meta = meta,
+            metap = metap,
+            
+            metappi0 = metappi0,
+            
+            mpi013 = mpi013,
+            mpi024 = mpi024,
+            mpi014 = mpi014,
+            mpi023 = mpi023,
+            
+            mant = mant,
+            num_unusedshowers = num_unusedshowers,
+            
+            mpipp = mpipp,
+            mpi0p = mpi0p,
+            mpippimpi0 = mpippimpi0,
+            
+            cost_pi0 = cost_pi0,
+            pi0phiGJ = pi0phiGJ,
+            
+            cost_etap = cost_etap,
+            etaprimephiGJ = etaprimephiGJ,
+            
+            photon1_sq = photon1_sq,
+            photon2_sq = photon2_sq,
+            photon3_sq = photon3_sq,
+            photon4_sq = photon4_sq
+            
+            
+            
+            
+            )
+
+
+"""
+
+
+
+
+
