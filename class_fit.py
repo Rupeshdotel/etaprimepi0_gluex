@@ -101,8 +101,8 @@ class gauss_fit():
         self.X = self.a * x + self.b
         #y = 4 * self.X**3 * (1 - self.X) #old cut
         #y = 3 * self.X**2 * (1 - self.X)
-        y =  2*self.X*(1 - self.X)  #new cut
-        #y = self.X
+        #y =  2*self.X*(1 - self.X)  #new cut
+        y = self.X
         return self.c0() * y
     
     

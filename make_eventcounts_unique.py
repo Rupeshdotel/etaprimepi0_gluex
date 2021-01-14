@@ -51,9 +51,11 @@ def find_duplicates(np_array, get_value_index = False):
     
 #%%
 
-f = np.load('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/new_eventsprompt_17.npz')
+#f = np.load('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/new_eventsprompt_18_re.npz')
 #f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz')
 
+# read the selected events, the event selection is already done
+f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events.npz')
 #i = 100
 event_num = f['event_num'][:]
 kinfit_CL = f['kinfit_CL'][:]
@@ -78,10 +80,10 @@ mpipp = f['mpipp'][:]
 mpi0p = f['mpi0p'][:]
 mpippimpi0 = f['mpippimpi0'][:]
 
-pi0costhetaGJ = f['pi0costhetaGJ'][:]
+pi0costhetaGJ = f['cost_pi0'][:]
 pi0phiGJ = f['pi0phiGJ'][:]
 
-etaprimecosthetaGJ = f['etaprimecosthetaGJ'][:]
+etaprimecosthetaGJ = f['cost_etap'][:]
 etaprimephiGJ = f['etaprimephiGJ'][:]
 
 photon1_sq = f['photon1_sq'][:]
@@ -90,10 +92,9 @@ photon3_sq = f['photon3_sq'][:]
 photon4_sq = f['photon4_sq'][:]
 
 #%%
-
 en ,il, vil = find_duplicates(event_num, True)
 en = np.array(en)
-il = np.array(il)
+il = np.array(il, dtype = object)
 vil = np.array(vil)
 #%%
 
@@ -133,9 +134,9 @@ photon4_sq = photon4_sq[vil]
 
 
 #%%
-np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/unique_new_eventspromt_17.npz',
+#np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/unique_new_eventspromt_18_re.npz',
          
-         
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_selected_events.npz',         
             event_num = event_num,
             kinfit_CL = kinfit_CL,
             chisq_ndf = chisq_ndf,
@@ -159,19 +160,16 @@ np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_1
             mpi0p = mpi0p,
             mpippimpi0 = mpippimpi0,
             
-            pi0costhetaGJ = pi0costhetaGJ,
+            cost_pi0 = pi0costhetaGJ,
             pi0phiGJ = pi0phiGJ,
             
-            etaprimecosthetaGJ = etaprimecosthetaGJ,
+            cost_etap = etaprimecosthetaGJ,
             etaprimephiGJ = etaprimephiGJ,
             
             photon1_sq = photon1_sq,
             photon2_sq = photon2_sq,
             photon3_sq = photon3_sq,
             photon4_sq = photon4_sq
-            
-            
-            
             
             )
 

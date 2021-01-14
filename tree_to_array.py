@@ -11,7 +11,7 @@ import ROOT as R
 from root_numpy import tree2array
 #%%
 
-rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree_17.root")
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree_18_re.root")
 
 intree = rfile.Get('qfactortree')
 
@@ -56,7 +56,7 @@ photon3_sq = array['photon3_sq']
 photon4_sq = array['photon4_sq']
 
 #%%
-np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz', 
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_18_re.npz', 
          
          
         event_num = event_num,

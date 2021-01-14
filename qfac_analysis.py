@@ -13,7 +13,7 @@ import class_fit as cf
 
 #%%
 
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_selected_events.npz')
 
 event_num = d['event_num']
 kinfit_CL = d['kinfit_CL']
@@ -123,7 +123,7 @@ A_fit = cf.gauss_fit()
 A_fit.set_fit_list( fit = ['A', 'x0', 'sigma', 'c0', 'b0'])
 
 # set parameters for combined gaussian linear fit 
-A_fit.A.set(350.)
+A_fit.A.set(2000.)
 A_fit.x0.set(0.1365)
 A_fit.sigma.set(0.004)
 A_fit.b0.set(0.8)
@@ -131,7 +131,7 @@ A_fit.db0.set(0.0)
 A_fit.c0.set(50.)
 
 #set bounds for  combined gaussian linear fit 
-A_fit.A_min.set(100.); A_fit.A_max.set(1000.)
+A_fit.A_min.set(100.); A_fit.A_max.set(3000.)
 A_fit.x0_min.set(0.13); A_fit.x0_max.set(0.14)
 A_fit.sigma_min.set(0.003); A_fit.sigma_max.set(0.03)
 
@@ -270,6 +270,7 @@ ht_p = B.histo(mpi0, range = (mp_min, mp_max), bins = 24, title = 'Non-weighted'
 plt.figure();
 hb_p.plot_exp();hs_p.plot_exp();ht_p.plot_exp()
 
+#%%
 #get histograms (2D) etaprime vs pi0mass
 hs2 = B.histo2d(metap, mpi0, range = [[mep_min, mep_max], [mp_min, mp_max]],
                 bins = (24, 24), title = 'Invariant Mass in 2D for Signal events', weights = qs*qse, 
@@ -328,7 +329,15 @@ plt.figure();hm.plot_exp()
 hb = h2S_GJ.project_x(range = [-1.0, -0.5])
 plt.figure();hb.plot_exp()
 
+#%%
 
+# project 2d signal response in forward, middle and backward angles
+hf = h2B_GJ.project_x(range = [0.5, 1])
+plt.figure();hf.plot_exp()
+hm = h2B_GJ.project_x(range = [-0.5, 0.5])
+plt.figure();hm.plot_exp()
+hb = h2B_GJ.project_x(range = [-1.0, -0.5])
+plt.figure();hb.plot_exp()
 
 
 

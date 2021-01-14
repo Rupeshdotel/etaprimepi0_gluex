@@ -20,8 +20,8 @@ mpippimpi0_min = 0.73
 mpippimpi0_max = 0.86
 
 #maximum mandlestam t allowed 
-mant_min = 0.0
-mant_max = 1.0
+mant_min = 1.0
+mant_max = 100.0
 
 #shower quality
 sq_min = 0.5

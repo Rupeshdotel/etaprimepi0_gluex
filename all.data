@@ -16,8 +16,8 @@ twopi0veto_min = 0.11
 twopi0veto_max = 0.17
 
 #omega window to be rejected
-mpippimpi0_min = 0.73
-mpippimpi0_max = 0.86
+mpippimpi0_min = 0.75
+mpippimpi0_max = 0.85
 
 #maximum mandlestam t allowed 
 mant_min = 0.0
@@ -31,6 +31,4 @@ sq_max = 1.0
 #maximum allowed  extra showers (optimum value from FOM is 3)
 extrashowers_min  = 0
 extrashowers_max =  2 
-
-
 

@@ -56,8 +56,8 @@ etaprimephiGJ = d['etaprimephiGJ']
 #%%
 c_par = B.LT.parameterfile.pfile('parameters2.data')
 #2pi0 veto
-#twopi0veto_min = c_par.get_value('twopi0veto_min'); twopi0veto_max =  c_par.get_value('twopi0veto_max ') 
-twopi0veto_min = 0.12; twopi0veto_max =  0.15;
+twopi0veto_min = c_par.get_value('twopi0veto_min'); twopi0veto_max =  c_par.get_value('twopi0veto_max ') 
+#twopi0veto_min = 0.12; twopi0veto_max =  0.15;
 mpi013_min = twopi0veto_min; mpi013_max = twopi0veto_max
 mpi024_min = twopi0veto_min; mpi024_max = twopi0veto_max
 mpi014_min = twopi0veto_min; mpi014_max = twopi0veto_max

@@ -1,6 +1,9 @@
 #include "DSelector_pi0etapr__B4_M35_M7_M17.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <vector>
+
 using namespace std;
 //ofstream myfile ("pi0qfactor.txt");
 //ofstream myfile1 ("etaprimeqfactor.data");
@@ -28,7 +31,7 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	//dFlatTreeName = ""; //if blank, default name will be chosen
 	
 
-  
+	
 	
 	
       
@@ -50,9 +53,11 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	fileout = new TFile("qfactortree.root", "Recreate");
 	qfactortree = new TTree("qfactortree", "qfactortree");
 
+	
 
 	Get_ComboWrappers();
 	dPreviousRunNumber = 0;
+	
 
 	/*********************************** EXAMPLE USER INITIALIZATION: ANALYSIS ACTIONS **********************************/
 
@@ -444,6 +449,8 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	qfactortree->Branch("chisq_ndf", &chisq_ndf, "chisq_ndf/D");
 	qfactortree->Branch("event_num", &event_num, "event_num/I");
 
+	//qfactortree->Branch("unique_event_num", &unique_event_num, "unique_event_num/I");
+
 	qfactortree->Branch("pippimpi0", &pippimpi0, "pippimpi0/D");
 	qfactortree->Branch("pipp", &pipp, "pipp/D");
 	qfactortree->Branch("pi0p", &pi0p, "pi0p/D");
@@ -524,10 +531,13 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 	DSelector::Process(locEntry); //Gets the data from the tree for the entry
 
 	if(Get_EventNumber()%100000==0) {cout << "RUN " << Get_RunNumber() << ", EVENT " << Get_EventNumber() << endl;}
+	//{cout << "RUN " << Get_RunNumber() << ", EVENT " << Get_EventNumber() << endl;}
+	//cout << "dPreviousEventNumber" << Get_EventNumber() << endl;
 	//TLorentzVector locProductionX4 = Get_X4_Production();
 
 	
 
+	
 
 	/******************************************** GET POLARIZATION ORIENTATION ******************************************/
 
@@ -539,6 +549,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		dIsPolarizedFlag = dAnalysisUtilities.Get_IsPolarizedBeam(locRunNumber, dIsPARAFlag);
 		dPreviousRunNumber = locRunNumber;
 	}
+
+
+	
 
 	/********************************************* SETUP UNIQUENESS TRACKING ********************************************/
 
@@ -564,6 +577,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 	set<map<Particle_t, set<Int_t> > > locUsedSoFar_MissingMass;
 
 	//INSERT USER ANALYSIS UNIQUENESS TRACKING HERE
+
+	//counter = 0;
 
 	/**************************************** EXAMPLE: FILL CUSTOM OUTPUT BRANCHES **************************************/
 
@@ -608,6 +623,31 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		  }
 
 
+		/************************** Get unique event numbers ***************/
+	
+		/*bool Unique_event = false;
+		Int_t locEventNumber = Get_EventNumber();
+		if(locEventNumber != dPreviousEventNumber)
+		{
+			
+			dPreviousEventNumber = locEventNumber;
+			Unique_event = true;
+
+		}*/
+	
+		
+
+	//cout << "dPreviousEventNumber" << dPreviousEventNumber << endl;
+	    
+		/*bool Unique_event = false;
+		current_event_num = Get_EventNumber();
+		if (loc_i++) {next_event_num = Get_EventNumber();}
+
+		if (current_event_num != next_event_num)
+		{
+			Unique_event = true;
+		}
+		*/
 		
 		
 
@@ -1066,6 +1106,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		chisq_ndf = chisq/ndf;                     //cout << chisq_ndf << "chisq/ndf" << endl;
 		event_num = Get_EventNumber();
 
+		//unique_event_num = dPreviousEventNumber;
+		
+
 		// variables for 2pi0 , t and extra showers cut experimentation
 
 		etapi0mass = locMassetapi0;
@@ -1135,9 +1178,17 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
 			{
 
-			// Fill the qfactor tree	
-			qfactortree->Fill(); 
+			
+			//if (Unique_event)
+			// Fill the qfactor tree
+			
 
+			
+			//counter += 1;
+			//if(counter == 1) 
+			qfactortree->Fill();
+
+			
 
 			//1-D photon pairs kinfitted variables
  
@@ -1381,6 +1432,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 	//FILL HISTOGRAMS: Num combos / events surviving actions
 	Fill_NumCombosSurvivedHists();
 
+	
 	/******************************************* LOOP OVER THROWN DATA (OPTIONAL) ***************************************/
 /*
 	//Thrown beam: just use directly

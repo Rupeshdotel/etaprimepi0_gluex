@@ -340,6 +340,8 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Int_t ndf;
 		Int_t event_num;
 
+		//Int_t unique_event_num;
+
     	Double_t  pi0mass;
 		Double_t  etaprimemass;
 		Double_t  etaprimepi0mass;
@@ -382,6 +384,8 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Double_t photon3_sq;
 		Double_t photon4_sq;
 
+		
+		
 	ClassDef(DSelector_pi0etapr__B4_M35_M7_M17, 0);
 };
 

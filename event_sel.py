@@ -6,31 +6,43 @@ Created on Wed Jan  6 10:28:26 2021
 @author: rupeshdotel
 """
 
+"doing event selection before making the events unique makes use of  find duplicates possible in make_events_unique.py "
+
 import numpy as np
 import LT.box as B
-
+import ROOT as R
+from root_numpy import tree2array
 import class_fit as cf
 import matplotlib.pyplot as plt
 #%%
 
-#load the npz data file
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_new_eventspromt_17.npz')
+#load the qtree file
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qtree.root")
+intree = rfile.Get('qfactortree')
+d = tree2array(intree)
 
-#get the variables as numpy arrays
 event_num = d['event_num']
 kinfit_CL = d['kinfit_CL']
 chisq_ndf = d['chisq_ndf']
 num_combos = d['num_combos']
 combo_number = d['combo_number']
-mpi0 = d['mpi0']
-meta = d['meta']
-metap = d['metap']
+mpi0 = d['pi0mass']
+meta = d['etamass']
+metap = d['etaprimemass']
 
-metappi0 = d['metappi0']
+metappi0 = d['etaprimepi0mass']
 
-mpipp = d['mpipp']
-mpi0p = d['mpi0p']
-mpippimpi0 = d['mpippimpi0']
+mpi013 = d['pi0mass13']
+mpi024 = d['pi0mass24']
+mpi014 = d['pi0mass14']
+mpi023 = d['pi0mass23']
+
+mant = d['mant']
+num_unusedshowers = d['num_unusedshowers']
+
+mpipp = d['pipp']
+mpi0p = d['pi0p']
+mpippimpi0 = d['pippimpi0']
 
 cost_pi0 = d['pi0costhetaGJ']
 pi0phiGJ = d['pi0phiGJ']
@@ -38,21 +50,10 @@ pi0phiGJ = d['pi0phiGJ']
 cost_etap = d['etaprimecosthetaGJ']
 etaprimephiGJ = d['etaprimephiGJ']
 
-#new variables
-
-mpi013 = d['mpi013']
-mpi024 = d['mpi024']
-mpi014 = d['mpi014']
-mpi023 = d['mpi023']
-
 photon1_sq = d['photon1_sq']
 photon2_sq = d['photon2_sq']
 photon3_sq = d['photon3_sq']
 photon4_sq = d['photon4_sq']
-
-mant = d['mant']
-num_unusedshowers = d['num_unusedshowers']
-
 
 
 #%%
@@ -186,91 +187,47 @@ plt.figure();h2_ep_cost.plot()
 #%%
 
 """
-
-#get the variables as numpy arrays
-event_num = event_num[sel]
-kinfit_CL = kinfit_CL[sel]
-chisq_ndf = chisq_ndf[sel]
-num_combos = num_combos[sel]
-combo_number = combo_number[sel]
-mpi0 = mpi0[sel]
-meta = meta[sel]
-metap = metap[sel]
-
-metappi0 = metappi0[sel]
-
-mpipp = mpipp[sel]
-mpi0p = mpi0p[sel]
-mpippimpi0 = mpippimpi0[sel]
-
-cost_pi0 = cost_pi0[sel]
-pi0phiGJ = pi0phiGJ[sel]
-
-cost_etap = cost_etap[sel]
-etaprimephiGJ = etaprimephiGJ[sel]
-
-#new variables
-
-mpi013 = mpi013[sel]
-mpi024 = mpi024[sel]
-mpi014 = mpi014[sel]
-mpi023 = mpi023[sel]
-
-photon1_sq = photon1_sq[sel]
-photon2_sq = photon2_sq[sel]
-photon3_sq = photon3_sq[sel]
-photon4_sq = photon4_sq[sel]
-
-mant = mant[sel]
-num_unusedshowers = num_unusedshowers[sel]
-
-
-
-
 np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events.npz',
          
          
-            event_num = event_num,
-            kinfit_CL = kinfit_CL,
-            chisq_ndf = chisq_ndf,
-            num_combos = num_combos,
-            combo_number = combo_number,
-            mpi0 = mpi0,
-            meta = meta,
-            metap = metap,
+            event_num = event_num[sel],
+            kinfit_CL = kinfit_CL[sel],
+            chisq_ndf = chisq_ndf[sel],
+            num_combos = num_combos[sel],
+            combo_number = combo_number[sel],
+            mpi0 = mpi0[sel],
+            meta = meta[sel],
+            metap = metap[sel],
             
-            metappi0 = metappi0,
+            metappi0 = metappi0[sel],
             
-            mpi013 = mpi013,
-            mpi024 = mpi024,
-            mpi014 = mpi014,
-            mpi023 = mpi023,
+            mpi013 = mpi013[sel],
+            mpi024 = mpi024[sel],
+            mpi014 = mpi014[sel],
+            mpi023 = mpi023[sel],
             
-            mant = mant,
-            num_unusedshowers = num_unusedshowers,
+            mant = mant[sel],
+            num_unusedshowers = num_unusedshowers[sel],
             
-            mpipp = mpipp,
-            mpi0p = mpi0p,
-            mpippimpi0 = mpippimpi0,
+            mpipp = mpipp[sel],
+            mpi0p = mpi0p[sel],
+            mpippimpi0 = mpippimpi0[sel],
             
-            cost_pi0 = cost_pi0,
-            pi0phiGJ = pi0phiGJ,
+            cost_pi0 = cost_pi0[sel],
+            pi0phiGJ = pi0phiGJ[sel],
             
-            cost_etap = cost_etap,
-            etaprimephiGJ = etaprimephiGJ,
+            cost_etap = cost_etap[sel],
+            etaprimephiGJ = etaprimephiGJ[sel],
             
-            photon1_sq = photon1_sq,
-            photon2_sq = photon2_sq,
-            photon3_sq = photon3_sq,
-            photon4_sq = photon4_sq
-            
-            
-            
+            photon1_sq = photon1_sq[sel],
+            photon2_sq = photon2_sq[sel],
+            photon3_sq = photon3_sq[sel],
+            photon4_sq = photon4_sq[sel]
             
             )
 
-
 """
+
 
 
 
