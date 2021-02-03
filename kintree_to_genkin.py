@@ -16,6 +16,7 @@ import numpy as np
 import ROOT as R
 from root_numpy import tree2array
 from ROOT import TLorentzVector
+from ROOT import TVector3
 
 #%%
 rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/genamp_gen_resonance.root")
@@ -42,6 +43,7 @@ def get_gen_kin(rootfile):
     mpi0 = np.zeros_like(Px)
     metaprimepi0 = np.zeros_like(Px)
     beam_energy = np.zeros_like(Px)
+    cos_theta = np.zeros_like(Px)
     
     #declare  TLorentzVector
     Beam_P4 = TLorentzVector()
@@ -50,7 +52,22 @@ def get_gen_kin(rootfile):
     Pi0_P4 = TLorentzVector()
     Etaprimepi0_P4 = TLorentzVector()
     
+    #declare stuff to convert to GJ frame
+    boostGJ = TVector3()
+    Beam_P4_GJ = TLorentzVector()
+    Proton_P4_GJ = TLorentzVector()
+    Etaprime_P4_GJ = TLorentzVector()
+    Pi0_P4_GJ = TLorentzVector()
+    Etaprimepi0_P4_GJ = TLorentzVector()
     
+    z_GJ = TVector3()
+    z_hat_GJ = TVector3()
+    
+    y_GJ = TVector3()
+    y_hat_GJ = TVector3()
+    
+    x_hat_GJ = TVector3()
+    v = TVector3() 
     
     for i in range(len(Px)):
     #for i in range(100):
@@ -64,9 +81,38 @@ def get_gen_kin(rootfile):
         Etaprime_P4.SetPxPyPzE(Px[i][1], Py[i][1], Pz[i][1], E[i][1])
         Pi0_P4.SetPxPyPzE(Px[i][2], Py[i][2], Pz[i][2], E[i][2])
         
-        
+        #do stuff here
         Etaprimepi0_P4 = Etaprime_P4 + Pi0_P4
         
+        #get the boost vector
+        boostGJ = (-1) * (Etaprimepi0_P4.Vect())*(1.0/Etaprimepi0_P4.E())
+        
+        
+        Beam_P4_GJ = Beam_P4
+        Proton_P4_GJ = Proton_P4
+        Etaprime_P4_GJ = Etaprime_P4
+        Pi0_P4_GJ = Pi0_P4
+        Etaprimepi0_P4_GJ = Etaprimepi0_P4
+        
+        
+        
+        #boost vectors to GJ frame
+        Beam_P4_GJ.Boost(boostGJ)
+        Proton_P4_GJ.Boost(boostGJ)
+        Etaprime_P4_GJ.Boost(boostGJ)
+        Pi0_P4_GJ.Boost(boostGJ)
+        Etaprimepi0_P4_GJ.Boost(boostGJ)
+        
+        z_GJ.SetXYZ(Beam_P4_GJ.X(),Beam_P4_GJ.Y(),Beam_P4_GJ.Z())
+        z_hat_GJ = z_GJ.Unit() 
+        
+        y_GJ = Beam_P4.Vect().Cross(Etaprimepi0_P4.Vect())
+        y_hat_GJ = y_GJ.Unit() 
+        
+        x_hat_GJ = y_hat_GJ.Cross(z_hat_GJ)
+        
+        v.SetXYZ(Etaprime_P4_GJ.Vect()*x_hat_GJ, Etaprime_P4_GJ.Vect()*y_hat_GJ, Etaprime_P4_GJ.Vect()*z_hat_GJ)
+        cos_theta[i]  = v.CosTheta()
         
         mproton[i] = Proton_P4.M()
         metap[i] = Etaprime_P4.M()
@@ -74,14 +120,20 @@ def get_gen_kin(rootfile):
         metaprimepi0[i] = Etaprimepi0_P4.M()
         beam_energy[i] = Beam_P4.E()
         
+        
     
     return np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/gen_events.npz', 
                     mproton = mproton,
                     metap = metap, 
                     mpi0 = mpi0, 
-                    metaprimepi0 = metaprimepi0, 
+                    metaprimepi0 = metaprimepi0,
+                    cos_theta = cos_theta,
                     beam_energy = beam_energy)
-    #return mproton, metap, mpi0, metaprimepi0, beam_energy
+
+"""load the file as 
+g = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/gen_events.npz',  allow_pickle = True)
+get numpy array as 
+metaprimepi0 = g['metaprimepi0']"""
     
     
     
