@@ -39,20 +39,20 @@ void Selector_gen_events::Begin(TTree * /*tree*/)
    //TString option = GetOption();
    //hist = new TH1D("hist","Histogram of pt",100, -2.0, 2.0);
 
-   //declare outputfile and qfactortree
-	fileout = new TFile("qfactortree.root", "Recreate");
-	qfactortree = new TTree("qfactortree", "qfactortree");
+   //declare outputfile and gen_mctree
+	fileout = new TFile("gen_mctree.root", "Recreate");
+	gen_mctree = new TTree("gen_mctree", "gen_mctree");
 
 
   
 
 
-   qfactortree->Branch("mproton", &mproton, "mproton/D");
-   qfactortree->Branch("metap", &metap, "metap/D");
-   qfactortree->Branch("mpi0", &mpi0, "mpi0/D");
-   qfactortree->Branch("metaprimepi0", &metaprimepi0, "metaprimepi0/D");
-   qfactortree->Branch("cos_theta", &cos_theta, "cos_theta/D");
-   qfactortree->Branch("beam_energy", &beam_energy, "beam_energy/D");
+   gen_mctree->Branch("mproton", &mproton, "mproton/D");
+   gen_mctree->Branch("metap", &metap, "metap/D");
+   gen_mctree->Branch("mpi0", &mpi0, "mpi0/D");
+   gen_mctree->Branch("metaprimepi0", &metaprimepi0, "metaprimepi0/D");
+   gen_mctree->Branch("cos_theta", &cos_theta, "cos_theta/D");
+   gen_mctree->Branch("beam_energy", &beam_energy, "beam_energy/D");
    
 
 
@@ -94,6 +94,8 @@ Bool_t Selector_gen_events::Process(Long64_t entry)
    TLorentzVector  Pi0P4;
    TLorentzVector  EtaprimePi0P4;
 
+   TVector3 boostGJ;
+
    TVector3 z_GJ;
    TVector3 z_hat_GJ;
 
@@ -105,9 +107,10 @@ Bool_t Selector_gen_events::Process(Long64_t entry)
 
    TVector3 vetaprime;
 
+
    
    
-   
+   // get the required 4 vectors
    BeamP4.SetPxPyPzE(*Px_Beam, *Py_Beam, *Pz_Beam, *E_Beam);
 
    ProtonP4.SetPxPyPzE(Px_FinalState[0], Py_FinalState[0], Pz_FinalState[0], E_FinalState[0]);
@@ -117,12 +120,10 @@ Bool_t Selector_gen_events::Process(Long64_t entry)
    Pi0P4.SetPxPyPzE(Px_FinalState[2],Py_FinalState[2],Pz_FinalState[2],E_FinalState[2]);
     
 
+   //combine 4 vectors
    EtaprimePi0P4 = EtaprimeP4 + Pi0P4;
 
-     
-
-  
-
+   // get the required components from 4 vectors
    beam_energy = BeamP4.E();
    mproton = ProtonP4.M();
    metap = EtaprimeP4.M();
@@ -130,7 +131,7 @@ Bool_t Selector_gen_events::Process(Long64_t entry)
    metaprimepi0 = EtaprimePi0P4.M();
 
    // boost to GJ Frame
-   TVector3 boostGJ = -(EtaprimePi0P4.Vect())*(1.0/EtaprimePi0P4.E()); //calculate beta for etaprimepi0 system
+   boostGJ = -(EtaprimePi0P4.Vect())*(1.0/EtaprimePi0P4.E()); //calculate beta for etaprimepi0 system
 
       
 
@@ -157,11 +158,13 @@ Bool_t Selector_gen_events::Process(Long64_t entry)
    x_hat_GJ = y_hat_GJ.Cross(z_hat_GJ);//x hat GJ 
 
    vetaprime.SetXYZ(EtaPrimeP4_GJ.Vect()*x_hat_GJ, EtaPrimeP4_GJ.Vect()*y_hat_GJ, EtaPrimeP4_GJ.Vect()*z_hat_GJ);
+
+   //get costhetat in GJ
    cos_theta = vetaprime.CosTheta();  
 
 
-
-   qfactortree->Fill();
+   // fill the generated MC tree
+   gen_mctree->Fill();
 
    return kTRUE;
 }
@@ -181,8 +184,9 @@ void Selector_gen_events::Terminate()
    // the results graphically or save the results to file.
 //hist->Draw();
 
+//save the tree in outputfile 
 fileout->cd(); 
-qfactortree->Write();
+gen_mctree->Write();
 
 fileout->Close();
 

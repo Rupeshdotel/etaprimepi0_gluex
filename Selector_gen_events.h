@@ -55,11 +55,12 @@ public :
    virtual void    Terminate();
 
   
+  private:
 
    //declare a tree
    //tree stuff (variables for qfactor analysis) goes here
 	TFile *fileout; // file for the outputtree
-	TTree *qfactortree; //qfactortree
+	TTree *gen_mctree; //generated MC tree
 
    //tree variables
    Double_t mproton;
