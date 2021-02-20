@@ -18,10 +18,12 @@ from root_numpy import tree2array
 from ROOT import TLorentzVector
 from ROOT import TVector3
 
+
 #%%
 rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/genamp_gen_resonance.root")
 
 #%%
+
 def get_gen_kin(rootfile):
     
     intree = rfile.Get('kin')
@@ -67,10 +69,10 @@ def get_gen_kin(rootfile):
     y_hat_GJ = TVector3()
     
     x_hat_GJ = TVector3()
-    v = TVector3() 
+    vetaprime = TVector3() 
     
-    for i in range(len(Px)):
-    #for i in range(100):
+    #for i in range(len(Px)):
+    for i in range(100):
         #m = np.sqrt(E[i][0]**2 - (Px[i][0]**2 + Py[i][0]**2 + Pz[i][0]**2))
         #metap[i] = m
         
@@ -111,8 +113,8 @@ def get_gen_kin(rootfile):
         
         x_hat_GJ = y_hat_GJ.Cross(z_hat_GJ)
         
-        v.SetXYZ(Etaprime_P4_GJ.Vect()*x_hat_GJ, Etaprime_P4_GJ.Vect()*y_hat_GJ, Etaprime_P4_GJ.Vect()*z_hat_GJ)
-        cos_theta[i]  = v.CosTheta()
+        vetaprime.SetXYZ(Etaprime_P4_GJ.Vect()*x_hat_GJ, Etaprime_P4_GJ.Vect()*y_hat_GJ, Etaprime_P4_GJ.Vect()*z_hat_GJ)
+        cos_theta[i]  = vetaprime.CosTheta()
         
         mproton[i] = Proton_P4.M()
         metap[i] = Etaprime_P4.M()

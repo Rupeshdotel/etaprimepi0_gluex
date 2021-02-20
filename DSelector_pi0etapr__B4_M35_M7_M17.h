@@ -359,7 +359,7 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Double_t pippimpi0;
 		Double_t pipp;
 		Double_t pi0p;
-		Double_t dt;
+		
 
 		
 		Double_t BEa;
@@ -379,12 +379,71 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 
 		Double_t mant;
 
+		//tetaprime
+		Double_t t_etap;
+
 		Double_t photon1_sq;
 		Double_t photon2_sq;
 		Double_t photon3_sq;
 		Double_t photon4_sq;
 
-		
+		Double_t mis_mass2_m;
+		Double_t mis_mass2_k;
+
+		Double_t mis_energy_m;
+		Double_t mis_energy_k;
+
+		Double_t mis_mom_m;
+		Double_t mis_mom_px_m;
+		Double_t mis_mom_py_m;
+		Double_t mis_mom_pz_m;
+
+
+		Double_t mis_mom_k;
+		Double_t mis_mom_px_k;
+		Double_t mis_mom_py_k;
+		Double_t mis_mom_pz_k;
+
+		Int_t beamid;
+
+		//van hove variables
+		Double_t pt_p; 
+		Double_t pt_etap;
+		Double_t pt_pi0;  
+
+		Double_t pl_p; 
+		Double_t pl_etap;
+		Double_t pl_pi0;  
+
+		Double_t time_weights; 
+		Double_t dt; 
+
+		Double_t cost_pi0;
+
+		//to save to a  kintree for clean signal to do PWA (by Mariana)
+
+		Double_t px_pr;
+		Double_t px_etapr;
+		Double_t px_pi0;
+
+		Double_t py_pr;
+		Double_t py_etapr;
+		Double_t py_pi0;
+
+		Double_t pz_pr;
+		Double_t pz_etapr;
+		Double_t pz_pi0;
+
+		Double_t e_pr;
+		Double_t e_etapr;
+		Double_t e_pi0;
+
+		Double_t px_beam;
+		Double_t py_beam;
+		Double_t pz_beam;
+		Double_t e_beam;
+
+
 		
 	ClassDef(DSelector_pi0etapr__B4_M35_M7_M17, 0);
 };

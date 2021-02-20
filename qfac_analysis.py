@@ -13,7 +13,7 @@ import class_fit as cf
 
 #%%
 
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_selected_events.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_17.npz')
 
 event_num = d['event_num']
 kinfit_CL = d['kinfit_CL']
@@ -45,10 +45,10 @@ cost_etap = d['cost_etap']
 etaprimephiGJ = d['etaprimephiGJ']
 
 #%%
-mep_bins = 12 # bins etaprime invariant mass
+mep_bins = 18 # bins etaprime invariant mass
 mp_bins = 12 # bins pi0 invariant mass
 mep_min = 0.86 # left edge of etaprime invariant mass
-mep_max = 1.04 # right edge of etaprime invariant mass
+mep_max = 1.05 # right edge of etaprime invariant mass
 mp_min = 0.12 # left edge of pi0 invariant mass
 mp_max = 0.15 # right edge of pi0 invariant mass
 h_epi0 = B.histo2d( metap, mpi0, bins = (mep_bins, mp_bins),
@@ -123,7 +123,7 @@ A_fit = cf.gauss_fit()
 A_fit.set_fit_list( fit = ['A', 'x0', 'sigma', 'c0', 'b0'])
 
 # set parameters for combined gaussian linear fit 
-A_fit.A.set(2000.)
+A_fit.A.set(A_value.max())
 A_fit.x0.set(0.1365)
 A_fit.sigma.set(0.004)
 A_fit.b0.set(0.8)

@@ -150,19 +150,20 @@ qs_weights.dtype = [('signal_weights', np.float64, (1,))]
 
 
 #%%
-array2root(e, filename = "for_PWA.root", treename='kin', mode = 'recreate')
-array2root(px, filename = "for_PWA.root", treename='kin', mode = 'update')
+array2root(e, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/PWA.root", treename='kin', mode = 'recreate')
 
-array2root(py, filename = "for_PWA.root", treename='kin', mode = 'update')
-array2root(pz, filename = "for_PWA.root", treename='kin', mode = 'update')
+array2root(px, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
+
+array2root(py, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
+array2root(pz, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
 
 
-array2root(e_bm, filename = "for_PWA.root", treename='kin', mode = 'update')
-array2root(px_bm, filename = "for_PWA.root", treename='kin', mode = 'update')
-array2root(py_bm, filename = "for_PWA.root", treename='kin', mode = 'update')
-array2root(pz_bm, filename = "for_PWA.root", treename='kin', mode = 'update')
+array2root(e_bm, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
+array2root(px_bm, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
+array2root(py_bm, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
+array2root(pz_bm, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
 
-array2root(qs_weights, filename = "for_PWA.root", treename='kin', mode = 'update')
+array2root(qs_weights, filename = "/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/for_PWA.root", treename='kin', mode = 'update')
 
 
 #%%

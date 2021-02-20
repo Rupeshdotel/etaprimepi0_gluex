@@ -1,8 +1,7 @@
 #include "DSelector_pi0etapr__B4_M35_M7_M17.h"
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <vector>
+
 
 using namespace std;
 //ofstream myfile ("pi0qfactor.txt");
@@ -454,7 +453,7 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	qfactortree->Branch("pippimpi0", &pippimpi0, "pippimpi0/D");
 	qfactortree->Branch("pipp", &pipp, "pipp/D");
 	qfactortree->Branch("pi0p", &pi0p, "pi0p/D");
-	qfactortree->Branch("dt", &dt, "dt/D");
+	//qfactortree->Branch("dt", &dt, "dt/D");
 
 	qfactortree->Branch("etamass", &etamass, "etamass/D");
 	qfactortree->Branch("BEa", &BEa, "BEa/D");
@@ -474,6 +473,68 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	qfactortree->Branch("photon2_sq", &photon2_sq, "photon2_sq/D");
 	qfactortree->Branch("photon3_sq", &photon3_sq, "photon3_sq/D");
 	qfactortree->Branch("photon4_sq", &photon4_sq, "photon4_sq/D");
+
+	qfactortree->Branch("mis_energy_m", &mis_energy_m, "mis_energy_m/D");
+	qfactortree->Branch("mis_energy_k", &mis_energy_k, "mis_energy_k/D");
+
+	qfactortree->Branch("mis_mom_m", &mis_mom_m, "mis_mom_m/D");
+	qfactortree->Branch("mis_mom_px_m", &mis_mom_px_m, "mis_mom_px_m/D");
+	qfactortree->Branch("mis_mom_py_m", &mis_mom_py_m, "mis_mom_py_m/D");
+	qfactortree->Branch("mis_mom_pz_m", &mis_mom_pz_m, "mis_mom_pz_m/D");
+
+
+	qfactortree->Branch("mis_mom_k", &mis_mom_k, "mis_mom_k/D");
+	qfactortree->Branch("mis_mom_px_k", &mis_mom_px_k, "mis_mom_px_k/D");
+	qfactortree->Branch("mis_mom_py_k", &mis_mom_py_k, "mis_mom_py_k/D");
+	qfactortree->Branch("mis_mom_pz_k", &mis_mom_pz_k, "mis_mom_pz_k/D");
+
+	qfactortree->Branch("mis_mass2_m", &mis_mass2_m, "mis_mass2_m/D");
+	qfactortree->Branch("mis_mass2_k", &mis_mass2_k, "mis_mass2_k/D");
+
+	qfactortree->Branch("t_etap", &t_etap, "t_etap/D");
+
+	//van hove variables
+
+	qfactortree->Branch("pt_p", &pt_p, "pt_p/D");
+	qfactortree->Branch("pt_etap", &pt_etap, "pt_etap/D");
+	qfactortree->Branch("pt_pi0", &pt_pi0, "pt_pi0/D");
+
+	qfactortree->Branch("pl_p", &pl_p, "pl_p/D");
+	qfactortree->Branch("pl_etap", &pl_etap, "pl_etap/D");
+	qfactortree->Branch("pl_pi0", &pl_pi0, "pl_pi0/D");
+
+	qfactortree->Branch("dt", &dt, "dt/D");
+	qfactortree->Branch("time_weights", &time_weights, "time_weights/D");
+	
+	qfactortree->Branch("cost_pi0", &cost_pi0, "cost_pi0/D");
+
+	//qfactortree->Branch("beamid", &beamid, "beamid/I");
+
+	qfactortree->Branch("px_pr", &px_pr, "px_pr/D");
+	qfactortree->Branch("px_etapr", &px_etapr, "px_etapr/D");
+	qfactortree->Branch("px_pi0", &px_pi0, "px_pi0/D");
+
+	qfactortree->Branch("py_pr", &py_pr, "py_pr/D");
+	qfactortree->Branch("py_etapr", &py_etapr, "py_etapr/D");
+	qfactortree->Branch("py_pi0", &py_pi0, "py_pi0/D");
+
+	qfactortree->Branch("pz_pr", &pz_pr, "pz_pr/D");
+	qfactortree->Branch("pz_etapr", &pz_etapr, "pz_etapr/D");
+	qfactortree->Branch("pz_pi0", &pz_pi0, "pz_pi0/D");
+
+	qfactortree->Branch("e_pr", &e_pr, "e_pr/D");
+	qfactortree->Branch("e_etapr", &e_etapr, "e_etapr/D");
+	qfactortree->Branch("e_pi0", &e_pi0, "e_pi0/D");
+
+
+	
+	qfactortree->Branch("px_beam", &px_beam, "px_beam/D");
+	qfactortree->Branch("py_beam", &px_beam, "py_beam/D");
+	qfactortree->Branch("pz_beam", &pz_beam, "pz_beam/D");
+	qfactortree->Branch("e_beam", &e_beam, "e_beam/D");
+
+
+
 
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - FLAT TREE *************************/
@@ -557,7 +618,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 	//ANALYSIS ACTIONS: Reset uniqueness tracking for each action
 	//For any actions that you are executing manually, be sure to call Reset_NewEvent() on them here
-	Reset_Actions_NewEvent();
+	//Reset_Actions_NewEvent();
 	//dAnalyzeCutActions->Reset_NewEvent(); // manual action, must call Reset_NewEvent()
 
 	//PREVENT-DOUBLE COUNTING WHEN HISTOGRAMMING
@@ -713,9 +774,17 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		// Combine 4-vectors
 		TLorentzVector totalP4_Measured =  locBeamP4_Measured + dTargetP4;		
-		TLorentzVector locMissingP4_Measured =totalP4_Measured - 
+		TLorentzVector locMissingP4_Measured = totalP4_Measured - 
 		 (locPiPlusP4_Measured + locPiMinusP4_Measured + locProtonP4_Measured
 		  + locPhoton1P4_Measured + locPhoton2P4_Measured + locPhoton3P4_Measured + locPhoton4P4_Measured);
+
+
+		TLorentzVector totalP4 =  locBeamP4 + dTargetP4;	
+
+		TLorentzVector locMissingP4 = totalP4 - 
+		 (locPiPlusP4 + locPiMinusP4 + locProtonP4
+		  + locPhoton1P4 + locPhoton2P4 + locPhoton3P4 + locPhoton4P4);
+		
 
 		TLorentzVector locPhoton12 = locPhoton1P4 + locPhoton2P4;
 		TLorentzVector locPhoton13 = locPhoton1P4 + locPhoton3P4;
@@ -803,25 +872,53 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
         //redefine lab 4-vectors to centre of mass 4-vectors
 		TLorentzVector locBeamP4_CM=locBeamP4;
+		TLorentzVector locProtonP4_CM = locProtonP4;
 		TLorentzVector locEtaPrimeP4_CM=locEtaPrimeP4;
 		TLorentzVector locPi0P4_CM=locPhoton12;	
 		TLorentzVector locEtaP4_CM=locPhoton34;	 // define eta in CM
 		TLorentzVector locpippim_CM = locpippim;
 		TLorentzVector locEtaPrimePi0P4_CM=locEtaPrimePi0P4;
+		TLorentzVector	locdeltap_CM = locdeltap;
 
 		//boost in centre of mass 
 		locEtaPrimePi0P4_CM.Boost(boostCoM);
 		locBeamP4_CM.Boost(boostCoM);
 		locEtaPrimeP4_CM.Boost(boostCoM);
 		locPi0P4_CM.Boost(boostCoM);
+		locProtonP4_CM.Boost(boostCoM);
+		locdeltap_CM.Boost(boostCoM);
+
+
+		//vanhove variables 	
+		Double_t px_p =  locProtonP4_CM.Px();
+		Double_t py_p =  locProtonP4_CM.Py(); 
+		Double_t pz_p =  locProtonP4_CM.Pz();
+		Double_t px_etap =  locEtaPrimeP4_CM.Px(); 
+		Double_t py_etap =  locEtaPrimeP4_CM.Py(); 
+		Double_t pz_etap =  locEtaPrimeP4_CM.Pz();
+		Double_t px_pi0_cm =  locPi0P4_CM.Px(); 
+		Double_t py_pi0_cm =  locPi0P4_CM.Py(); 
+		Double_t pz_pi0_cm =  locPi0P4_CM.Pz();
+
+		pt_p =  pow((pow(px_p, 2.0) + pow(py_p, 2.0)), 0.5);
+		pt_etap =  pow((pow(px_etap, 2.0) + pow(py_etap, 2.0)), 0.5);
+		pt_pi0 =  pow((pow(px_pi0_cm, 2.0) + pow(py_pi0_cm, 2.0)), 0.5);
+
+		pl_p = fabs(pz_p);
+		pl_etap = fabs(pz_etap);
+		pl_pi0 = fabs(pz_pi0_cm);
+
 
 		locEtaP4_CM.Boost(boostCoM); // boost in CM
 		locpippim_CM.Boost(boostCoM);
 
         //GJ Boost
-		TVector3 boostGJ =-(locEtaPrimePi0P4_CM.Vect())*(1.0/locEtaPrimePi0P4_CM.E()); //calculate beta for etaprimepi0 system
+		TVector3 boostGJ = -(locEtaPrimePi0P4_CM.Vect())*(1.0/locEtaPrimePi0P4_CM.E()); //calculate beta for etaprimepi0 system
 
-		TVector3 boostGJ_EtaPrime =-(locEtaPrimeP4_CM.Vect())*(1.0/locEtaPrimeP4_CM.E()); //calculate beta for etaprime system
+		TVector3 boostGJ_EtaPrime = -(locEtaPrimeP4_CM.Vect())*(1.0/locEtaPrimeP4_CM.E()); //calculate beta for etaprime system
+
+		TVector3 boostGJ_Pi0P	= -(locdeltap_CM.Vect())*(1.0/locdeltap_CM.E());
+		                           
 
         //redefine centre of mass 4-vectors to 4-vectors in rest frame of etaprimepi0 system
 		TLorentzVector locEtaPrimePi0P4_GJ=locEtaPrimePi0P4_CM;
@@ -831,12 +928,20 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		TLorentzVector locPi0P4_GJ=locPi0P4_CM;
  		TLorentzVector locBeamP4GJ=locBeamP4_CM;
+		// TLorentzVector locProtonP4GJ = locProtonP4_CM;
 
 		TLorentzVector locBeamP4GJ_EtaPrime=locBeamP4_CM; //define beam in rest frame of etaprime
 
 		TLorentzVector locEtaP4_GJ_EtaPrime=locEtaP4_CM; // define eta in GJ frame of etaprime
 
 		TLorentzVector locpippim_GJ_EtaPrime=locpippim_CM; // define pippim  in GJ of etaprime
+
+		//redefine centre of mass 4-vectors to 4-vectors in rest frame of pi0proton system
+		TLorentzVector locPi0P4_GJ_pi0p = locPi0P4_CM;	
+		TLorentzVector locdeltap_GJ_pi0p = locdeltap_CM;
+		TLorentzVector locBeamP4GJ_pi0p = locBeamP4_CM;
+											
+
 
         //boost in rest frame of etaprimepi0 system
 		locEtaPrimePi0P4_GJ.Boost(boostGJ);
@@ -850,7 +955,12 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		locEtaP4_GJ_EtaPrime.Boost(boostGJ_EtaPrime);
 		locpippim_GJ_EtaPrime.Boost(boostGJ_EtaPrime);
 
-		
+		//boost in rest frame of pi0p
+		locPi0P4_GJ_pi0p.Boost(boostGJ_Pi0P);
+		locdeltap_GJ_pi0p.Boost(boostGJ_Pi0P);
+		locBeamP4GJ_pi0p.Boost(boostGJ_Pi0P);
+
+
 
 
         TVector3 z_GJ;
@@ -859,17 +969,28 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		TVector3 z_GJ_EtaPrime;
 		z_GJ_EtaPrime.SetXYZ(locBeamP4GJ_EtaPrime.X(),locBeamP4GJ_EtaPrime.Y(),locBeamP4GJ_EtaPrime.Z());//z GJ_EtaPrime
-		TVector3 z_hat_GJ_EtaPrime=z_GJ_EtaPrime.Unit();  //beam direction (z-direction) 
+		TVector3 z_hat_GJ_EtaPrime = z_GJ_EtaPrime.Unit();  //beam direction (z-direction) 
+		
+		TVector3 z_GJ_pi0p;
+		z_GJ_pi0p.SetXYZ(locBeamP4GJ_pi0p.X(), locBeamP4GJ_pi0p.Y(), locBeamP4GJ_pi0p.Z());//z GJ_pi0p
+		TVector3 z_hat_GJ_pi0p = z_GJ_pi0p.Unit();  //beam direction (z-direction) 
 
-		TVector3 y_GJ=locBeamP4_CM.Vect().Cross(locEtaPrimePi0P4_CM.Vect());  //y-direction for rest frame of etaprimepi0 system
-		TVector3 y_hat_GJ=y_GJ.Unit();    
 
-		TVector3 y_GJ_EtaPrime=locBeamP4_CM.Vect().Cross(locEtaPrimeP4_CM.Vect());  //y-direction for rest frame of etaprime system
-		TVector3 y_hat_GJ_EtaPrime=y_GJ_EtaPrime.Unit();    
+		TVector3 y_GJ = locBeamP4_CM.Vect().Cross(locEtaPrimePi0P4_CM.Vect());  //y-direction for rest frame of etaprimepi0 system
+		TVector3 y_hat_GJ = y_GJ.Unit();    
 
-		TVector3 x_hat_GJ=y_hat_GJ.Cross(z_hat_GJ);//x hat GJ 
+		TVector3 y_GJ_EtaPrime = locBeamP4_CM.Vect().Cross(locEtaPrimeP4_CM.Vect());  //y-direction for rest frame of etaprime system
+		TVector3 y_hat_GJ_EtaPrime = y_GJ_EtaPrime.Unit();    
 
-		TVector3 x_hat_GJ_EtaPrime=y_hat_GJ_EtaPrime.Cross(z_hat_GJ_EtaPrime);//x hat GJ_EtaPrime 
+		TVector3 y_GJ_pi0 = locBeamP4_CM.Vect().Cross(locdeltap_CM.Vect());  //y-direction for rest frame of etaprime system
+		TVector3 y_hat_GJ_pi0p = y_GJ_pi0.Unit();    
+
+		TVector3 x_hat_GJ = y_hat_GJ.Cross(z_hat_GJ);//x hat GJ 
+
+		TVector3 x_hat_GJ_EtaPrime = y_hat_GJ_EtaPrime.Cross(z_hat_GJ_EtaPrime);//x hat GJ_EtaPrime 
+
+		TVector3 x_hat_GJ_pi0p = y_hat_GJ_pi0p.Cross(z_hat_GJ_pi0p);//x hat GJ_pi0p
+
 		
 		TVector3 vetaprime(locEtaPrimeP4_GJ.Vect()*x_hat_GJ, locEtaPrimeP4_GJ.Vect()*y_hat_GJ, // etaprime 3-vector in etaprimepi0 rest frame
 		locEtaPrimeP4_GJ.Vect()*z_hat_GJ);
@@ -886,6 +1007,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		locpippim_GJ_EtaPrime.Vect()*z_hat_GJ_EtaPrime);
 
 
+		TVector3 vpi0_pi0p(locPi0P4_GJ_pi0p.Vect()*x_hat_GJ_pi0p, locPi0P4_GJ_pi0p.Vect()*y_hat_GJ_pi0p, // pi0 3-vector in pi0p rest frame
+		locPi0P4_GJ_pi0p.Vect()*z_hat_GJ_pi0p);
+
 
 		double cosThetaEta_GJ_EtaPrime = veta.CosTheta(); 
 		double PhiEta_GJ_EtaPrime = veta.Phi()*180./TMath::Pi(); 
@@ -896,6 +1020,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		double BE_GJ = locBeamP4GJ.E();
 		double BE_GJ_EtaPrime = locBeamP4GJ_EtaPrime.E();
+
+		double cost_pi0_GJ_pi0p = vpi0_pi0p.CosTheta(); 
 
 
 		 //cout << "cosThetapippim_GJ_EtaPrime" << cosThetapippim_GJ_EtaPrime << endl;
@@ -930,8 +1056,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		// Loop through the analysis actions, executing them in order for the active particle combo
 		//dAnalyzeCutActions->Perform_Action(); // Must be executed before Execute_Actions()
-		if(!Execute_Actions()) //if the active combo fails a cut, IsComboCutFlag automatically set
-			continue;
+		//if(!Execute_Actions()) //if the active combo fails a cut, IsComboCutFlag automatically set
+		//	continue;
 
 		//if you manually execute any actions, and it fails a cut, be sure to call:
 			//dComboWrapper->Set_IsComboCut(true);
@@ -974,8 +1100,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		  locWeight = 1.;
 		  locAccid = false;
 		}
-                else { // accidentals recieve a weight of 1/# RF bunches included in TTree (4 in this case)
-		  locWeight = -1./4.;
+                else { // accidentals recieve a weight of 1/# RF bunches included in TTree (8 in this case)
+		  locWeight = -1./8.;
 		  locAccid = true;
 
 
@@ -986,16 +1112,17 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		/**************************************** EXAMPLE: HISTOGRAM BEAM ENERGY *****************************************/
 
 		//Histogram beam energy (if haven't already)
-		if(locUsedSoFar_BeamEnergy.find(locBeamID) == locUsedSoFar_BeamEnergy.end())
-		{
-			dHist_BeamEnergy->Fill(locBeamP4.E());
-			locUsedSoFar_BeamEnergy.insert(locBeamID);
-		}
+		//if(locUsedSoFar_BeamEnergy.find(locBeamID) == locUsedSoFar_BeamEnergy.end())
+		//{
+		//	dHist_BeamEnergy->Fill(locBeamP4.E());
+		//	locUsedSoFar_BeamEnergy.insert(locBeamID);
+		//}
 
 		/************************************ EXAMPLE: HISTOGRAM MISSING MASS SQUARED ************************************/
 
 		//Missing Mass Squared
-		double locMissingMassSquared = locMissingP4_Measured.M2();
+		double locMissingMassSquared_m = locMissingP4_Measured.M2();
+		double locMissingMassSquared_k = locMissingP4.M2();
 
 		double locMissingEnergy = locMissingP4_Measured.E();
 
@@ -1016,6 +1143,37 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		double locMassPhoton23 = locPhoton23.M();
 		double locMassPhoton24 = locPhoton24.M();
 		double locMassPhoton34 = locPhoton34.M();
+
+
+		double Px_proton = locProtonP4.Px();
+		double Px_etapr = locEtaPrimeP4.Px();
+		double Px_pi0 = locPhoton12.Px();
+		
+
+
+		double Py_proton = locProtonP4.Py();
+		double Py_etapr = locEtaPrimeP4.Py();
+		double Py_pi0 = locPhoton12.Py();
+		
+
+		double Pz_proton = locProtonP4.Pz();
+		double Pz_etapr = locEtaPrimeP4.Pz();
+		double Pz_pi0 = locPhoton12.Pz();
+		
+
+
+		double E_proton = locProtonP4.E();
+		double E_etapr = locEtaPrimeP4.E();
+		double E_pi0 = locPhoton12.E();
+		
+
+		double Px_beam = locBeamP4.Px();
+		double Py_beam = locBeamP4.Py();
+		double Pz_beam = locBeamP4.Pz();
+		double E_beam = locBeamP4.E();
+
+
+
 
 		
 		double locMassetaprime = locetaprime.M();
@@ -1095,7 +1253,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		pippimpi0 = locMassomega;
 		pipp = locMassdeltapp;
 		pi0p = locMassdeltap;
-		dt = locBeamDeltaT;
+		//dt = locBeamDeltaT;
 
 		BEa = BE;
 		
@@ -1126,7 +1284,56 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		photon3_sq = photon3_shower_quality;
 		photon4_sq = photon4_shower_quality;
 		
+		mis_energy_m = locMissingP4_Measured.E();
 
+		mis_mom_px_m = locMissingP4_Measured.Px();
+		mis_mom_py_m = locMissingP4_Measured.Py();
+		mis_mom_pz_m = locMissingP4_Measured.Pz();
+
+		mis_mom_m = locMissingP4_Measured.Vect().Mag();
+		//mis_mom_m = mis_p_m;
+
+		mis_mom_px_k = locMissingP4.Px();
+		mis_mom_py_k = locMissingP4.Py();
+		mis_mom_pz_k = locMissingP4.Pz();
+
+		mis_mom_k = locMissingP4.Vect().Mag();
+		//mis_mom_k = mis_p_k;
+
+		mis_mass2_m = locMissingMassSquared_m;
+		mis_mass2_k = locMissingMassSquared_k;
+
+		//beamid = locBeamID;
+
+		// tetaprime
+
+		t_etap = t_EtaPrime;
+
+
+		time_weights = locWeight;
+		dt			 = 	locBeamDeltaT;
+		cost_pi0 = cost_pi0_GJ_pi0p; 
+
+		px_pr = Px_proton ;
+		px_etapr = Px_etapr;
+		px_pi0 = Px_pi0;
+
+		py_pr = Py_proton;
+		py_etapr = Py_etapr;
+		py_pi0 = Py_pi0;
+
+		pz_pr = Pz_proton;
+		pz_etapr = Pz_etapr;
+		pz_pi0 = Pz_pi0;
+
+		e_pr = E_proton ;
+		e_etapr = E_etapr;
+		e_pi0 = E_pi0;
+
+		px_beam = Px_beam;
+		py_beam = Py_beam;
+		pz_beam = Pz_beam;
+		e_beam = E_beam;
 
 
 		//Uniqueness tracking: Build the map of particles used for the missing mass
@@ -1145,7 +1352,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		if(locUsedSoFar_MissingMass.find(locUsedThisCombo_MissingMass) == locUsedSoFar_MissingMass.end())
 		{
 			//unique missing mass combo: histogram it, and register this combo of particles
-			dHist_MissingMassSquared->Fill(locMissingMassSquared);
+			dHist_MissingMassSquared->Fill(locMissingMassSquared_m);
+
+			//append locUsedThisCombo_MissingMass to locUsedSoFar_MissingMass so that it is not used again
 			locUsedSoFar_MissingMass.insert(locUsedThisCombo_MissingMass);
 
 			dHist_MissingEnergy->Fill(locMissingEnergy);
@@ -1155,9 +1364,9 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			/******************* Define Bools for event selection *****************/
 
 			Bool_t coherentbeam = (BE > 8.0) && (BE < 9.0);
-			Bool_t MissingMassSquaredcut = (locMissingMassSquared > -0.02) && (locMissingMassSquared < 0.02);
+			Bool_t MissingMassSquaredcut = (locMissingMassSquared_m > -0.02) && (locMissingMassSquared_m < 0.02);
 			Bool_t FCAL_showerqualitycut = (photon1_shower_quality > 0.5) && (photon2_shower_quality > 0.5)
-											 && (photon3_shower_quality > 0.5) && (photon3_shower_quality > 0.5);
+											 && (photon3_shower_quality > 0.5) && (photon4_shower_quality > 0.5);
 			
 			Bool_t pi013 = ((locMassPhoton13 > 0.12) && (locMassPhoton13 < 0.15)); 
 			Bool_t pi024 = ((locMassPhoton24 > 0.12) && (locMassPhoton24 < 0.15));
@@ -1174,7 +1383,8 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			
 			
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut && !locAccid)
-			if  (MissingMassSquaredcut && coherentbeam  && !locAccid)
+			//if  (MissingMassSquaredcut && coherentbeam  && !locAccid)
+			if  (MissingMassSquaredcut && coherentbeam)
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
 			{
 
@@ -1182,11 +1392,20 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			//if (Unique_event)
 			// Fill the qfactor tree
 			
+			//if(locUsedSoFar_BeamEnergy.find(locBeamID) == locUsedSoFar_BeamEnergy.end())
+		//{
+			//dHist_BeamEnergy->Fill(locBeamP4.E());
+			qfactortree->Fill();
+			//locUsedSoFar_BeamEnergy.insert(locBeamID);
+			//qfactortree->Fill();
+		//}
+
+
 
 			
 			//counter += 1;
 			//if(counter == 1) 
-			qfactortree->Fill();
+			
 
 			
 

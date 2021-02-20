@@ -228,7 +228,7 @@ class gauss_fit():
 
 #%%
 #if __name__ == "__main__":
- #  gauss_bt_fit()
+#   gauss_fit()
 
 
 

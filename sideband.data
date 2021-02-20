@@ -1,0 +1,15 @@
+#cut values 1
+#left sideband 
+la = 0.86
+lb = 0.91
+
+#right sideband
+ra = 1.00
+rb = 1.05
+
+#middle region
+ma = 0.93
+mb = 0.98
+
+
+

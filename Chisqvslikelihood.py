@@ -8,6 +8,7 @@ Created on Sun Jan 10 11:20:31 2021
 
 import numpy as np
 import LT.box as B
+import class_fit as cf
 
 from scipy.optimize import minimize
 import scipy.stats as stats
@@ -67,61 +68,120 @@ metap = d['metap']
 
 
 #chi square fit
-h = B.histo(metap, bins = 40)
+h = B.histo(metap, bins = 20)
 h.set_fit_list(fit = [ 'A', 'mean', 'sigma', 'b0', 'b1'])
 fit = h.fit()
 h.plot_exp()
 h.plot_fit()
 
+
 #%%
 
 #try likelihood fit
 #define a  gaussian peak 
-def peak(x, A):
-    #A = B.Parameter(700., 'A')
-    x0 = B.Parameter(0.956, 'x0')
-    sigma = B.Parameter(.014, 'sigma')
-    y = A * np.exp(-(x - x0.value )**2/(2.*sigma.value**2))
+"""
+def peak(x):
+    Aa = B.Parameter(1500., 'Aa')
+    x0 = B.Parameter(0.957, 'x0')
+    sigma = B.Parameter(.01665, 'sigma')
+    #y = 1./(np.sqrt(2.*np.pi)*sigma.value) * np.exp(-(x - x0.value )**2/(2.*sigma.value**2))
+    y = Aa.value * np.exp(-(x - x0.value )**2/(2.*sigma.value**2))
     return y
 
 #linear bkg
-def bkg(x, b0, b1):
-    y = b0 + b1 * x
+def bkg(x, b0, c0):
+    #y = b0 + b1 * x
+    f = cf.gauss_fit()
+         
+    # set initial parameters for fitting
+    #f.A.set(1500) 
+    #f.x0.set(0.956)
+    #f.sigma.set(0.01)
+    f.b0.set(0.05)
+    f.db0.set(0.5)
+    f.c0.set(500)
+    
+    # set bounds for the fit parameters
+    #f.A_min.set(0.); f.A_max.set(1e5)
+    #f.x0_min.set(0.95); f.x0_max.set(0.96)
+    #f.sigma_min.set(0.008); f.sigma_max.set(0.016)
+    f.c0_min.set(0.); f.c0_max.set(1e5)
+    f.b0_min.set(0.00); f.b0_max.set(0.20)
+    y = f.bt_bkg(x)
     return y
     
 #total function
-def signal(x, A, b0, b1):
-    return peak(x, A) + bkg(x, b0, b1)
+def signal(x, b0, c0):
+    return peak(x) + bkg(x, b0, c0)
+
+"""
+
+f = cf.gauss_fit()
+         
+# set initial parameters for fitting
+f.A.set(1500.) 
+f.x0.set(0.956)
+f.sigma.set(0.01)
+f.b0.set(0.05)
+f.db0.set(0.5)
+f.c0.set(500)
+
+# set bounds for the fit parameters
+f.A_min.set(0.); f.A_max.set(1e5)
+f.x0_min.set(0.95); f.x0_max.set(0.96)
+f.sigma_min.set(0.008); f.sigma_max.set(0.016)
+#f.c0_min.set(0.); f.c0_max.set(1e5)
+f.b0_min.set(0.00); f.b0_max.set(0.20)
+
 
 #define the likelihood that will be minimized 
 def lk(x, p):
-    A = p[0]
-    b0 = p[1]
-    b1 = p[2]
-    y = signal(x, A, b0, b1)
+    #A = p[0]
+    #K = np.zeros_like(x)
+    b0 = p[0]
+    c0 = p[1]
+    #b0 = f.b0.value
+    #c0 = f.c0.value
+    
+    
+    y = f.signal_bt_bkg(x)
+    #for i in p:
+        #if i > 0:
+           # k = np.log(y)
     lgl = -np.sum(np.log(y))
     return lgl      
 
 
 #guess the initial parameters
-A = 710.
-b0 = -1240.
-b1 = 1461.          
-guess = np.array([A, b0, b1])
-#limits = [[0.,1000.], [-2000, 2000], [0., 2000] ]
+#A = 1500.
+#b0 = -8000.
+#b1 = 9500.          
+#guess = np.array([ b0, b1])
+#limits = [[-1e5, 1e5], [-5e5, 5e5]]
+#q = cf.gauss_fit()
+#b0 = q.b0.set(0.05)
+#c0 = q.c0.set(500)
 
-results = minimize(lk, guess, args = (metap)) #,  bounds = limits, options={'disp': True})
+b0 = f.b0.value
+c0 = f.c0.value
+
+
+fit_par = np.array([b0, c0])
+results = minimize(lk, fit_par, args = (metap),   method='L-BFGS-B')
 
 print(results)
 
-A = results.x[0]
-b0 = results.x[1]
-b1 = results.x[2]
+#%%
+#A = results.x[0]
+b0 = results.x[0]
+b1 = results.x[1]
+
 
 h.plot_exp()
-B.plot_exp(metap, peak(metap, A))
+
+B.plot_exp(metap, peak(metap))
 B.plot_exp(metap, bkg(metap, b0, b1))
-B.plot_exp(metap, signal(metap, A, b0, b1))
+B.plot_exp(metap, signal(metap, b0, b1))
 
 
 

@@ -55,7 +55,7 @@ def find_duplicates(np_array, get_value_index = False):
 #f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz')
 
 # read the selected events, the event selection is already done
-f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events.npz')
+f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_less.npz')
 #i = 100
 event_num = f['event_num'][:]
 kinfit_CL = f['kinfit_CL'][:]
@@ -72,6 +72,7 @@ mpi013 = f['mpi013'][:]
 mpi024 = f['mpi024'][:]
 mpi014 = f['mpi014'][:]
 mpi023 = f['mpi023'][:]
+
 
 mant = f['mant'][:]
 num_unusedshowers = f['num_unusedshowers'][:]
@@ -91,7 +92,18 @@ photon2_sq = f['photon2_sq'][:]
 photon3_sq = f['photon3_sq'][:]
 photon4_sq = f['photon4_sq'][:]
 
+'''
+t_etap = f['t_etap'][:]
+pt_p = f['pt_p'][:]
+pt_etap = f['pt_etap'][:]
+pt_pi0 = f['pt_pi0'][:]
+
+pl_p = f['pl_p'][:]
+pl_etap = f['pl_etap'][:]
+pl_pi0 = f['pt_pi0'][:]
+'''
 #%%
+#en is the event number, il is the index list, vil is the value index list
 en ,il, vil = find_duplicates(event_num, True)
 en = np.array(en)
 il = np.array(il, dtype = object)
@@ -114,6 +126,7 @@ mpi024 = mpi024[vil]
 mpi014 = mpi014[vil]
 mpi023 = mpi023[vil]
 
+
 mant = mant[vil]
 num_unusedshowers = num_unusedshowers[vil]
 
@@ -132,11 +145,22 @@ photon2_sq = photon2_sq[vil]
 photon3_sq = photon3_sq[vil]
 photon4_sq = photon4_sq[vil]
 
+'''
+t_etap = t_etap[vil]
+pt_p = pt_p[vil]
+pt_etap = pt_etap[vil]
+pt_pi0  = pt_pi0[vil]    
+
+pl_p = pl_p[vil]
+pl_etap = pl_etap[vil]
+pl_pi0  = pl_pi0[vil]    
+'''
 
 #%%
 #np.savez('/w/halld-scifs17exp/halld2/home/rupesh/halld/pi0etapr__B4_M35_M7_M17_17/qfactortree/unique_new_eventspromt_18_re.npz',
-         
-np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_selected_events.npz',         
+
+
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_selected_events_less.npz',         
             event_num = event_num,
             kinfit_CL = kinfit_CL,
             chisq_ndf = chisq_ndf,
@@ -152,6 +176,7 @@ np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique
             mpi024 = mpi024,
             mpi014 = mpi014,
             mpi023 = mpi023,
+            
             
             mant = mant,
             num_unusedshowers = num_unusedshowers,
@@ -169,14 +194,24 @@ np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique
             photon1_sq = photon1_sq,
             photon2_sq = photon2_sq,
             photon3_sq = photon3_sq,
-            photon4_sq = photon4_sq
+            photon4_sq = photon4_sq,
+            
+            
+            
+            
             
             )
 
+'''
+t_etap =  t_etap,
+pt_p = pt_p,
+pt_etap = pt_etap,
+pt_pi0 = pt_pi0,
 
-
-
-
+pl_p = pl_p,
+pl_etap = pl_etap,
+pl_pi0 = pl_pi0
+'''
 
 
 
