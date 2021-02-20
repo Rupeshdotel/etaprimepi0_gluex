@@ -83,7 +83,7 @@ pl_pi0 = d['pl_pi0'];
 
 #%%
 # read the parameters data file 
-c_par = B.LT.parameterfile.pfile('parameters5.data')
+c_par = B.LT.parameterfile.pfile('/Users/rupeshdotel/analysis/work/gluexgit/data_files/data/parameters5.data')
 
 # load the parameters values
 mm2_min = c_par.get_value('mm2_min'); mm2_max =  c_par.get_value('mm2_max') 

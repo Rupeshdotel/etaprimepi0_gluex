@@ -57,7 +57,7 @@ mep_bins = 25 # bins etaprime invariant mass
 h_ep = B.histo(metap,   bins = mep_bins,  title = "$\eta'$", xlabel = "$M(\pi^{+}\pi^{-}\eta)$")
 
 #read the ASCII data file
-par = B.LT.parameterfile.pfile('sideband.data')
+par = B.LT.parameterfile.pfile('/Users/rupeshdotel/analysis/work/gluexgit/data_files/data/sideband.data')
 
 # load the parameters values
 la = par.get_value('la'); lb = par.get_value('lb') # left sideband edges
