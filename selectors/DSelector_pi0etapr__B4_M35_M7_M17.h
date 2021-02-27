@@ -38,6 +38,7 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		UInt_t dPreviousRunNumber;
 		bool dIsPolarizedFlag; //else is AMO
 		bool dIsPARAFlag; //else is PERP or AMO
+		Int_t dPolarizationAngle;
 
 		
 
@@ -71,6 +72,7 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		// DEFINE YOUR HISTOGRAMS HERE
 		// EXAMPLES:
 
+		/*
 		TH1I* dHist_MissingMassSquared;
 
 		TH1I* dHist_MissingEnergy;
@@ -331,6 +333,8 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 
 		TH2F* dHist_pippimetavspi0;
 
+		*/
+
 		//tree stuff (variables for qfactor analysis) goes here
 		TFile *fileout; // file for the outputtree
 		TTree *qfactortree; //qfactortree
@@ -339,109 +343,131 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 		Int_t combo_number;
 		Int_t ndf;
 		Int_t event_num;
+		Int_t run_num;
 
 		//Int_t unique_event_num;
 
-    	Double_t  pi0mass;
-		Double_t  etaprimemass;
-		Double_t  etaprimepi0mass;
-		Double_t etamass; 
+    	Float_t  pi0mass;
+		Float_t  etaprimemass;
+		Float_t  etaprimepi0mass;
+		Float_t etamass; 
 
-		Double_t pi0costhetaGJ;
-		Double_t pi0phiGJ;
-		Double_t etaprimecosthetaGJ;
-		Double_t etaprimephiGJ;
+		Float_t pi0costhetaGJ;
+		Float_t pi0phiGJ;
+		Float_t etaprimecosthetaGJ;
+		Float_t etaprimephiGJ;
 
-		Double_t kinfit_CL;
-		Double_t chisq;
-		Double_t chisq_ndf;
+		Float_t kinfit_CL;
+		Float_t chisq;
+		Float_t chisq_ndf;
 
-		Double_t pippimpi0;
-		Double_t pipp;
-		Double_t pi0p;
+
+		Int_t pol;
+		//Float_t pippimpi0;
+		
+		//Float_t pi0p;
 		
 
 		
-		Double_t BEa;
+		
 		
 
 		// save variables for cut experimentation of 2pi0, t and extra showers
 
-		Double_t etapi0mass; 
+		
 		
 
-		Double_t  pi0mass13;
-		Double_t  pi0mass24;
-		Double_t  pi0mass14;
-		Double_t  pi0mass23;
+		//Float_t  pi0mass13;
+		//Float_t  pi0mass24;
+		//Float_t  pi0mass14;
+		//Float_t  pi0mass23;
 
+		
+
+		Float_t mant;
+		Float_t dt; 
+		Float_t time_weights; 
+		
+
+		Float_t photon1_sq;
+		Float_t photon2_sq;
+		Float_t photon3_sq;
+		Float_t photon4_sq;
+
+		/*
+
+		Float_t pipp;
+		Float_t etapi0mass; 
 		Int_t num_unusedshowers;
 
-		Double_t mant;
-
 		//tetaprime
-		Double_t t_etap;
+		Float_t t_etap;
 
-		Double_t photon1_sq;
-		Double_t photon2_sq;
-		Double_t photon3_sq;
-		Double_t photon4_sq;
+		Float_t mis_mass2_m;
+		Float_t mis_mass2_k;
 
-		Double_t mis_mass2_m;
-		Double_t mis_mass2_k;
+		Float_t mis_energy_m;
+		Float_t mis_energy_k;
 
-		Double_t mis_energy_m;
-		Double_t mis_energy_k;
-
-		Double_t mis_mom_m;
-		Double_t mis_mom_px_m;
-		Double_t mis_mom_py_m;
-		Double_t mis_mom_pz_m;
+		Float_t mis_mom_m;
+		Float_t mis_mom_px_m;
+		Float_t mis_mom_py_m;
+		Float_t mis_mom_pz_m;
 
 
-		Double_t mis_mom_k;
-		Double_t mis_mom_px_k;
-		Double_t mis_mom_py_k;
-		Double_t mis_mom_pz_k;
+		Float_t mis_mom_k;
+		Float_t mis_mom_px_k;
+		Float_t mis_mom_py_k;
+		Float_t mis_mom_pz_k;
 
 		Int_t beamid;
 
 		//van hove variables
-		Double_t pt_p; 
-		Double_t pt_etap;
-		Double_t pt_pi0;  
+		Float_t pt_p; 
+		Float_t pt_etap;
+		Float_t pt_pi0;  
 
-		Double_t pl_p; 
-		Double_t pl_etap;
-		Double_t pl_pi0;  
+		Float_t pl_p; 
+		Float_t pl_etap;
+		Float_t pl_pi0;  
 
-		Double_t time_weights; 
-		Double_t dt; 
+		
+		
 
-		Double_t cost_pi0;
+
+
+		Float_t cost_pi0;
+
+		*/
 
 		//to save to a  kintree for clean signal to do PWA (by Mariana)
 
-		Double_t px_pr;
-		Double_t px_etapr;
-		Double_t px_pi0;
+		Float_t px_pr;
+		Float_t px_etapr;
+		Float_t px_pi0;
 
-		Double_t py_pr;
-		Double_t py_etapr;
-		Double_t py_pi0;
+		Float_t py_pr;
+		Float_t py_etapr;
+		Float_t py_pi0;
 
-		Double_t pz_pr;
-		Double_t pz_etapr;
-		Double_t pz_pi0;
+		Float_t pz_pr;
+		Float_t pz_etapr;
+		Float_t pz_pi0;
 
-		Double_t e_pr;
-		Double_t e_etapr;
-		Double_t e_pi0;
+		Float_t e_pr;
+		Float_t e_etapr;
+		Float_t e_pi0;
 
-		Double_t px_beam;
-		Double_t py_beam;
-		Double_t pz_beam;
-		Double_t e_beam;
+		Float_t px_beam;
+		Float_t py_beam;
+		Float_t pz_beam;
+		Float_t e_beam;
+
+		//target walls and vertex
+		Float_t z;
+		Float_t r;
+
+		Int_t counter;
 
 
 		
