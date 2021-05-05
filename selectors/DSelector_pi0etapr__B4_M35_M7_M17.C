@@ -69,9 +69,9 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	//std::deque<Particle_t> MyPhi;
 	//MyPhi.push_back(KPlus); MyPhi.push_back(KMinus);
 
-	std::deque<Particle_t> MyEtaPrime;
+	//std::deque<Particle_t> MyEtaPrime;
 
-  	MyEtaPrime.push_back(PiMinus); MyEtaPrime.push_back(PiPlus); MyEtaPrime.push_back(Eta);
+  	//MyEtaPrime.push_back(PiMinus); MyEtaPrime.push_back(PiPlus); MyEtaPrime.push_back(Eta);
 
 	//ANALYSIS ACTIONS: //Executed in order if added to dAnalysisActions
 	//false/true below: use measured/kinfit data
@@ -439,9 +439,10 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 
 	// Add branches to the qfactortree
 	qfactortree->Branch("num_combos", &num_combos, "num_combos/I");
-	qfactortree->Branch("pi0mass", &pi0mass, "pi0mass/F");
-	qfactortree->Branch("etaprimemass", &etaprimemass, "etaprimemass/F");
-	qfactortree->Branch("etaprimepi0mass", &etaprimepi0mass, "etaprimemasspi0/F");
+	qfactortree->Branch("mpi0", &mpi0, "mpi0/F");
+	qfactortree->Branch("mpi0m", &mpi0m, "mpi0m/F");
+	qfactortree->Branch("metap", &metap, "metap/F");
+	qfactortree->Branch("metappi0", &metappi0, "metappi0/F");
 
 	qfactortree->Branch("pi0costhetaGJ", &pi0costhetaGJ, "pi0costhetaGJ/F");
 	qfactortree->Branch("pi0phiGJ", &pi0phiGJ, "pi0phiGJ/F");
@@ -461,7 +462,8 @@ void DSelector_pi0etapr__B4_M35_M7_M17::Init(TTree *locTree) // ::(called scope)
 	
 	//qfactortree->Branch("dt", &dt, "dt/D");
 
-	qfactortree->Branch("etamass", &etamass, "etamass/F");
+	qfactortree->Branch("meta", &meta, "meta/F");
+	qfactortree->Branch("metam", &metam, "metam/F");
 	
 
 	//qfactortree->Branch("pippimpi0", &pippimpi0, "pippimpi0/D");
@@ -630,11 +632,11 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 	UInt_t locRunNumber = Get_RunNumber();
 	if(locRunNumber != dPreviousRunNumber)
 	{
-		dIsPARAFlag = 0;  // set these so that they don't pick up silly values if not polarized
-		dPolarizationAngle = -1;
+		//dIsPARAFlag = 0;  // set these so that they don't pick up silly values if not polarized
+		//dPolarizationAngle = -1;
 		dIsPolarizedFlag = dAnalysisUtilities.Get_IsPolarizedBeam(locRunNumber, dIsPARAFlag);
 		dAnalysisUtilities.Get_PolarizationAngle(locRunNumber,  dPolarizationAngle); 
-		pol = dPolarizationAngle;
+		
 		//pol = dIsPolarizedFlag;
 		//cout << dIsPolarizedFlag << endl;
 		dPreviousRunNumber = locRunNumber;
@@ -1248,10 +1250,13 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		num_combos =  Get_NumCombos();
 		combo_number = loc_i;
 
-		pi0mass = locMassPhoton12;
-		etaprimemass = locEtaPrimeP4mass;
-		etaprimepi0mass = locEtaPrimePi0P4mass;
-		etamass = locMassPhoton34;
+		mpi0 = locMassPhoton12;
+
+		mpi0m   = locPhoton12_Measured.M();
+		metap = locEtaPrimeP4mass;
+		metappi0 = locEtaPrimePi0P4mass;
+		meta = locMassPhoton34;
+		metam   = locPhoton34_Measured.M();
 
 		pi0costhetaGJ = cosThetapi0_GJ;
 		pi0phiGJ = phipi0_GJ;
@@ -1266,7 +1271,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 		
 		
 
-		kinfit_CL = locKinFitConLev;
+		//kinfit_CL = locKinFitConLev;
 		chisq = dComboWrapper->Get_ChiSq_KinFit();  //cout <<  chisq << "chisq" << endl;
 		ndf = dComboWrapper->Get_NDF_KinFit();     //cout <<  ndf << "ndf" << endl;
 		chisq_ndf = chisq/ndf;                     //cout << chisq_ndf << "chisq/ndf" << endl;
@@ -1363,6 +1368,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 
 		z = locProtonX4_Measured.Z();
 		r = locProtonX4_Measured.Perp();
+		pol = dPolarizationAngle;
 
 		//dIsPolarizedFlag = dAnalysisUtilities.Get_IsPolarizedBeam(locRunNumber, dIsPARAFlag);
 		//pol = dIsPolarizedFlag;
@@ -1423,17 +1429,17 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut && !locAccid)
 			//if  (MissingMassSquaredcut && coherentbeam  && !locAccid)
-			if  (MissingMassSquaredcut && coherentbeam && pi0masswindow && etamasswindow && etaprimemasswindow && 
+			/*if  (MissingMassSquaredcut && coherentbeam && pi0masswindow && etamasswindow && etaprimemasswindow && 
 			
 			!((pi013 && pi024) || (pi014 && pi023)) && 
 			!(pi0p_deltap) &&
 			!(omega) 
 
-			 )
+			 )*/
 
 			 
 			//if  (MissingMassSquaredcut && coherentbeam && FCAL_showerqualitycut) //accidental study
-			{
+			//{
 
 			
 			//if (Unique_event)
@@ -1669,7 +1675,7 @@ Bool_t DSelector_pi0etapr__B4_M35_M7_M17::Process(Long64_t locEntry)
 			
 			*/
 
-			} // MissingMasssquaredcut,coherentbeam,showerqualitycut, coincidence time cut ends
+			//} // MissingMasssquaredcut,coherentbeam,showerqualitycut, coincidence time cut ends
 			
 		} // end of "if(locUsedSoFar_MissingMass.find(locUsedThisCombo_MissingMass) == locUsedSoFar_MissingMass.end())"
 

@@ -42,6 +42,7 @@ void Selector_gen_events::Begin(TTree * /*tree*/)
    //declare outputfile and gen_mctree
 	fileout = new TFile("gen_mctree.root", "Recreate");
 	gen_mctree = new TTree("gen_mctree", "gen_mctree");
+   
 
 
   

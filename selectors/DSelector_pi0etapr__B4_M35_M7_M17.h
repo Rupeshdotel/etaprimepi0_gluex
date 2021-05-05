@@ -347,10 +347,12 @@ class DSelector_pi0etapr__B4_M35_M7_M17 : public DSelector
 
 		//Int_t unique_event_num;
 
-    	Float_t  pi0mass;
-		Float_t  etaprimemass;
-		Float_t  etaprimepi0mass;
-		Float_t etamass; 
+    	Float_t  mpi0;
+		Float_t  mpi0m;
+		Float_t  metap;
+		Float_t  metappi0;
+		Float_t  meta; 
+		Float_t  metam;
 
 		Float_t pi0costhetaGJ;
 		Float_t pi0phiGJ;
