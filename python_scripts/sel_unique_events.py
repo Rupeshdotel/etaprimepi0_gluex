@@ -58,16 +58,57 @@ def find_duplicates(np_array):
 
     
 #%%
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/mm.npz')
-en = d['en']
-rn = d['rn']
+#d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluex_17_18_cons_incamo.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluexI_cons.npz')
+en = d['event_num']
+rn = d['run_num']
+pol = d['pol']
+
+#use m variables and cost for data only to do q factors
 mpi0 = d['mpi0']
+meta = d['meta']
+metap = d['metap']
+metappi0 = d['metappi0']
+#cost_etap = d['cost_etap']
+
+#cost_etap_gj = d['cost_etap_gj']
+#phi_etap_gj = d['phi_etap_gj']
+
+cost_etap_gj = d['cost_etap']
+phi_etap_gj = d['phi_etap']
+#mant = d['mant']
+
+
+#2) required for both MC and data
+
+px_pr = d['px_pr']
+px_etapr = d['px_etapr']
+px_pi0 = d['px_pi0']
+
+py_pr = d['py_pr']
+py_etapr = d['py_etapr']
+py_pi0 = d['py_pi0']
+
+pz_pr = d['pz_pr']
+pz_etapr = d['pz_etapr']
+pz_pi0 = d['pz_pi0']
+
+e_pr = d['e_pr']
+e_etapr = d['e_etapr']
+e_pi0 = d['e_pi0']
+
+px_beam = d['px_beam']
+py_beam = d['py_beam']
+pz_beam = d['pz_beam']
+e_beam = d['e_beam']
+
+#%%
+
 
 #for test
 #en = en[:500]
 #rn = rn[:500]
 #mpi0 = mpi0[:500]
-
 
 pair = np.array([rn, en]) #run number event number pair
 pair = pair.T
@@ -75,8 +116,10 @@ pair = pair.T
 
 pair = pair.tolist() # get the pair as list outside the function 
 
+#%%
 pair_nd, il = find_duplicates(pair[:]) #pair_nd is pair with duplicates removed
 
+#%%
 len_il = [len(i) for i in il]
 len_il = np.array(len_il)
 
@@ -87,6 +130,7 @@ unique_pair = pair_nd[sel] #unique pair is where an event number shows up only o
 
 unique_en = unique_pair[:,1] # select corresponding event numbers
 
+#%%
 
 # create a mask to select other variables  for unique events
 mask = []
@@ -98,13 +142,83 @@ for i in en:
 
 mask = np.array(mask)
 
+#%%
 #get different variables corresponding to unique events variables
 mpi0 = mpi0[mask]
+meta = meta[mask]
+metap = metap[mask]
+metappi0 = metappi0[mask]
+cost_etap_gj = cost_etap_gj[mask]
+phi_etap_gj = phi_etap_gj[mask]
+#mant = mant[mask]
 
 
+#2) required for both MC and data
 
+px_pr = px_pr[mask]
+px_etapr = px_etapr[mask]
+px_pi0 = px_pi0[mask]
 
+py_pr = py_pr[mask]
+py_etapr = py_etapr[mask]
+py_pi0 = py_pi0[mask]
 
+pz_pr = pz_pr[mask]
+pz_etapr = pz_etapr[mask]
+pz_pi0 = pz_pi0[mask]
+
+e_pr = e_pr[mask]
+e_etapr = e_etapr[mask]
+e_pi0 = e_pi0[mask]
+
+px_beam = px_beam[mask]
+py_beam = py_beam[mask]
+pz_beam = pz_beam[mask]
+e_beam = e_beam[mask]
+pol = pol[mask]
+
+#%%
+
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluexI_unique_cons.npz',
+         
+            #1) for data only
+           
+            #use m variables and cost for data only to do q factors
+            mpi0 = mpi0,
+            meta = meta,
+            metap = metap,
+            metappi0 = metappi0,
+            cost_etap_gj = cost_etap_gj,
+            phi_etap_gj = phi_etap_gj,
+            #mant = mant,
+            
+            #2) required for both MC and data
+            
+            px_pr = px_pr,
+            px_etapr = px_etapr,
+            px_pi0 = px_pi0,
+
+            py_pr = py_pr,
+            py_etapr = py_etapr,
+            py_pi0 = py_pi0,
+
+            pz_pr = pz_pr,
+            pz_etapr = pz_etapr,
+            pz_pi0 = pz_pi0,
+
+            e_pr = e_pr,
+            e_etapr = e_etapr,
+            e_pi0 = e_pi0,
+
+            px_beam = px_beam,
+            py_beam = py_beam,
+            pz_beam = pz_beam,
+            e_beam = e_beam,
+            pol = pol
+           
+            
+            
+           )
 
 
         
