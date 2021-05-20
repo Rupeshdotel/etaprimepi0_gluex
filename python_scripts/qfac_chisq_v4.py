@@ -328,7 +328,7 @@ np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qweigh
 np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qweights_2d.npz',
          qf = qf)
 
-#test github desktop
+
 #%%
 
 
