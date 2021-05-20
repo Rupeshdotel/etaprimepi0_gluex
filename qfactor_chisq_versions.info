@@ -1,0 +1,4 @@
+qfactor_chisq_v1.py : fixed distance
+qfactor_chisq_v2.py :  calculted all distance
+qfactor_chisq_v3.py : theta and phi both
+qfactor_chisq_v4.py :  include error

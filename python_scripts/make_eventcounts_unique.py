@@ -55,7 +55,9 @@ def find_duplicates(np_array, get_value_index = False):
 #f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/new_eventsprompt_17.npz')
 
 # read the selected events, the event selection is already done
-f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_less.npz')
+f = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/.npz')
+
+
 #i = 100
 event_num = f['event_num'][:]
 kinfit_CL = f['kinfit_CL'][:]

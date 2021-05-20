@@ -118,6 +118,17 @@ class DSelector_pi0pippimeta_18 : public DSelector
 		Double_t costheta_X_cm;
 		Double_t phi_gj;
 		Int_t pol;
+		Int_t photon1id_thrown;
+		Int_t photon1id_parentid;
+		Int_t photon2id_thrown;
+		Int_t photon3id_thrown;
+		Int_t photon4id_thrown;
+		Int_t protonid_thrown;
+		Int_t pipid_thrown;
+		Int_t pimid_thrown;
+
+		Int_t beam_thrown_id;
+		Int_t beam_recon_id;
 
 		//info for amplitude analysis for Mariana
 		Float_t px_pr;

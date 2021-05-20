@@ -15,38 +15,17 @@ import LT.box as B
 #%%
 
 #d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_17_acc_sub.npz')
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_17.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluexI.npz')
 
-event_num = d['event_num']
-kinfit_CL = d['kinfit_CL']
-chisq_ndf = d['chisq_ndf']
-num_combos = d['num_combos']
-combo_number = d['combo_number']
-mpi0 = d['mpi0']
-meta = d['meta']
+
+#mpi0 = d['mpi0']
+#meta = d['meta']
 metap = d['metap']
-
 metappi0 = d['metappi0']
-
-mpi013 = d['mpi013']
-mpi024 = d['mpi024']
-mpi014 = d['mpi014']
-mpi023 = d['mpi023']
-
-mant = d['mant']
-num_unusedshowers = d['num_unusedshowers']
-
-mpipp = d['mpipp']
-mpi0p = d['mpi0p']
-mpippimpi0 = d['mpippimpi0']
-
-cost_pi0 = d['cost_pi0']
-pi0phiGJ = d['pi0phiGJ']
-
 cost_etap = d['cost_etap']
-etaprimephiGJ = d['etaprimephiGJ']
 
-acc_w = d['acc_w']
+
+
 
 #%%
 
@@ -164,15 +143,15 @@ h2_signal.y_bin_center =  h2_left.y_bin_center
 
 #look at the 1d etaprimepi0 inavriant mass plots in the sidebands and after the bkg is  subtracted using sideband technique
 
-h_left = B.histo(metappi0[sel_left], range = [1.3, 3.0] ,  bins =  15,
+h_left = B.histo(metappi0[sel_left], range = [1.0, 3.0] ,  bins =  25,
                        title = "left-sideband",
                xlabel = "$M(\eta^{'}\pi^{0})$" )
 
-h_middle = B.histo(metappi0[sel_middle],  range = [1.3, 3.0] ,   bins =  15,
+h_middle = B.histo(metappi0[sel_middle],  range = [1.0, 3.0] ,   bins =  25,
                        title = " middle-band",
                xlabel = "$M(\eta^{'}\pi^{0})$" )
 
-h_right = B.histo(metappi0[sel_right],   range = [1.3, 3.0] ,  bins =  15,
+h_right = B.histo(metappi0[sel_right],   range = [1.0, 3.0] ,  bins =  25,
                        title = "right-sideband",
                xlabel = "$M(\eta^{'}\pi^{0})$" )
 

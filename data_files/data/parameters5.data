@@ -17,11 +17,11 @@ metap_min = 0.85
 metap_max = 1.05
 
 #pi0pi0 window to be rejected
-twopi0veto_min = 0.11
-twopi0veto_max = 0.17
+twopi0veto_min = 0.10
+twopi0veto_max = 0.175
 
 #omega window to be rejected
-mpippimpi0_min = 0.75
+mpippimpi0_min = 0.73
 mpippimpi0_max = 0.83
 
 meta_for_omega_min = 0.51

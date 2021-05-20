@@ -12,7 +12,7 @@ import LT.box as B
 
 #%%
 #d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/unique_cons_17_18_pol_0.npz')
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluex_unique_cons_17_18.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluex_unique_cons_17_18_incamo.npz')
 
 
 #%%

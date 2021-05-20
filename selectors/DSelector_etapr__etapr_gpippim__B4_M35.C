@@ -1,9 +1,6 @@
-#include "DSelector_pi0pippimeta.h"
-#include <iostream>
-#include <fstream>
-using namespace std;
+#include "DSelector_etapr__etapr_gpippim__B4_M35.h"
 
-void DSelector_pi0pippimeta::Init(TTree *locTree)
+void DSelector_etapr__etapr_gpippim__B4_M35::Init(TTree *locTree)
 {
 	// USERS: IN THIS FUNCTION, ONLY MODIFY SECTIONS WITH A "USER" OR "EXAMPLE" LABEL. LEAVE THE REST ALONE.
 
@@ -12,10 +9,10 @@ void DSelector_pi0pippimeta::Init(TTree *locTree)
 	// Init() will be called many times when running on PROOF (once per file to be processed).
 
 	//USERS: SET OUTPUT FILE NAME //can be overriden by user in PROOF
-	dOutputFileName = "pi0pippimeta.root"; //"" for none
-	//dOutputTreeFileName = ""; //"" for none
-	//dFlatTreeFileName = ""; //output flat tree (one combo per tree entry), "" for none
-	//dFlatTreeName = ""; //if blank, default name will be chosen
+	dOutputFileName = "etapr__etapr_gpippim__B4_M35.root"; //"" for none
+	dOutputTreeFileName = ""; //"" for none
+	dFlatTreeFileName = ""; //output flat tree (one combo per tree entry), "" for none
+	dFlatTreeName = ""; //if blank, default name will be chosen
 
 	//Because this function gets called for each TTree in the TChain, we must be careful:
 		//We need to re-initialize the tree interface & branch wrappers, but don't want to recreate histograms
@@ -25,10 +22,9 @@ void DSelector_pi0pippimeta::Init(TTree *locTree)
 	if(locInitializedPriorFlag)
 		return; //have already created histograms, etc. below: exit
 
-
-	//declare outputfile and qfactortree
-	fileout = new TFile("qfactortree.root", "Recreate");
-	qfactortree = new TTree("qfactortree", "qfactortree");
+	//declare outputfile file and tree
+	fileout = new TFile("Tree_etapr_gpippim.root", "Recreate");
+	Tree_etapr_gpippim = new TTree("Tree_etapr_gpippim", "Tree_etapr_gpippim");
 
 	Get_ComboWrappers();
 	dPreviousRunNumber = 0;
@@ -40,10 +36,6 @@ void DSelector_pi0pippimeta::Init(TTree *locTree)
 	// // Be sure to change this and dAnalyzeCutActions to match reaction
 	//std::deque<Particle_t> MyPhi;
 	//MyPhi.push_back(KPlus); MyPhi.push_back(KMinus);
-
-	//std::deque<Particle_t> MyEtaPrime;
-
-  	//MyEtaPrime.push_back(PiMinus); MyEtaPrime.push_back(PiPlus); MyEtaPrime.push_back(Eta);
 
 	//ANALYSIS ACTIONS: //Executed in order if added to dAnalysisActions
 	//false/true below: use measured/kinfit data
@@ -102,88 +94,17 @@ void DSelector_pi0pippimeta::Init(TTree *locTree)
 	dTreeInterface->Create_Branch_ClonesArray<TLorentzVector>("my_p4_array");
 	*/
 
-    /*
-	qfactortree->Branch("mm2", &mm2, "mm2/D");
+	Tree_etapr_gpippim->Branch("mm2m", &mm2m, "mm2m/D");
+	Tree_etapr_gpippim->Branch("dt", &dt, "dt/D");
+	Tree_etapr_gpippim->Branch("be", &be, "be/D");
+	Tree_etapr_gpippim->Branch("mant", &mant, "mant/D");
+	Tree_etapr_gpippim->Branch("mpippim", &mpippim, "mpippim/D");
+	Tree_etapr_gpippim->Branch("mgpippim", &mgpippim, "mgpippim/D");
+
+	Tree_etapr_gpippim->Branch("mpipp", &mpipp, "mpipp/D");
+	Tree_etapr_gpippim->Branch("mpimp", &mpimp, "mpimp/D");
+	Tree_etapr_gpippim->Branch("mpippimp", &mpippimp, "mpippimp/D");
 	
-	qfactortree->Branch("mpi0", &mpi0, "mpi0/D");
-	qfactortree->Branch("meta", &meta, "meta/D");
-	qfactortree->Branch("mpi0m", &mpi0m, "mpi0m/D");
-	qfactortree->Branch("metam", &metam, "metam/D");
-	qfactortree->Branch("metapm", &metapm, "metapm/D");
-	qfactortree->Branch("metappi0m", &metappi0m, "metappi0m/D");
-
-	
-	qfactortree->Branch("mpi013m", &mpi013m, "mpi013m/D");
-	qfactortree->Branch("mpi014m", &mpi014m, "mpi014m/D");
-	qfactortree->Branch("mpi023m", &mpi023m, "mpi023m/D");
-	qfactortree->Branch("mpi024m", &mpi024m, "mpi024m/D");
-
-	
-	qfactortree->Branch("mpippimpi0m", &mpippimpi0m, "mpippimpi0m/D");
-
-	
-	qfactortree->Branch("mpi0pm", &mpi0pm, "mpi0pm/D");
-
-	
-	qfactortree->Branch("mantm", &mantm, "mantm/D");
-
-	
-
-	qfactortree->Branch("px_pr", &px_pr, "px_pr/F");
-	qfactortree->Branch("px_etapr", &px_etapr, "px_etapr/F");
-	qfactortree->Branch("px_pi0", &px_pi0, "px_pi0/F");
-
-	qfactortree->Branch("py_pr", &py_pr, "py_pr/F");
-	qfactortree->Branch("py_etapr", &py_etapr, "py_etapr/F");
-	qfactortree->Branch("py_pi0", &py_pi0, "py_pi0/F");
-
-	qfactortree->Branch("pz_pr", &pz_pr, "pz_pr/F");
-	qfactortree->Branch("pz_etapr", &pz_etapr, "pz_etapr/F");
-	qfactortree->Branch("pz_pi0", &pz_pi0, "pz_pi0/F");
-
-	qfactortree->Branch("e_pr", &e_pr, "e_pr/F");
-	qfactortree->Branch("e_etapr", &e_etapr, "e_etapr/F");
-	qfactortree->Branch("e_pi0", &e_pi0, "e_pi0/F");
-	 
-	qfactortree->Branch("event_num", &event_num, "event_num/I");
-	qfactortree->Branch("run_num", &run_num, "run_num/I");
-
-
-
-	
-	qfactortree->Branch("px_beam", &px_beam, "px_beam/F");
-	qfactortree->Branch("py_beam", &px_beam, "py_beam/F");
-	qfactortree->Branch("pz_beam", &pz_beam, "pz_beam/F");
-	qfactortree->Branch("e_beam", &e_beam, "e_beam/F");
-
-	
-	qfactortree->Branch("pol", &pol, "pol/I");
-
-	*/
-	
-	qfactortree->Branch("mm2m", &mm2m, "mm2m/D");
-	qfactortree->Branch("dt", &dt, "dt/D");
-	qfactortree->Branch("be", &be, "be/D");
-	qfactortree->Branch("mpi013", &mpi013, "mpi013/D");
-	qfactortree->Branch("mpi014", &mpi014, "mpi014/D");
-	qfactortree->Branch("mpi023", &mpi023, "mpi023/D");
-	qfactortree->Branch("mpi024", &mpi024, "mpi024/D");
-
-	
-	qfactortree->Branch("metap", &metap, "metap/D");
-	qfactortree->Branch("metappi0", &metappi0, "metappi0/D");
-	qfactortree->Branch("mpippimpi0", &mpippimpi0, "mpippimpi0/D");
-	qfactortree->Branch("mproeta", &mproeta, "mproeta/D");
-	qfactortree->Branch("mpi0p", &mpi0p, "mpi0p/D");
-	qfactortree->Branch("mant", &mant, "mant/D");
-	qfactortree->Branch("photon1_sq", &photon1_sq, "photon1_sq/D");
-	qfactortree->Branch("photon2_sq", &photon2_sq, "photon2_sq/D");
-	qfactortree->Branch("photon3_sq", &photon3_sq, "photon3_sq/D");
-	qfactortree->Branch("photon4_sq", &photon4_sq, "photon4_sq/D");
-	qfactortree->Branch("cos_t", &cos_t, "cos_t/D");
-	qfactortree->Branch("costheta_X_cm", &costheta_X_cm, "costheta_X_cm/D");
-	qfactortree->Branch("phi_gj", &phi_gj, "phi_gj/D");
-
 
 
 
@@ -217,7 +138,7 @@ void DSelector_pi0pippimeta::Init(TTree *locTree)
 
 }
 
-Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
+Bool_t DSelector_etapr__etapr_gpippim__B4_M35::Process(Long64_t locEntry)
 {
 	// The Process() function is called for each entry in the tree. The entry argument
 	// specifies which entry in the currently loaded tree is to be processed.
@@ -232,7 +153,6 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 
 	//CALL THIS FIRST
 	DSelector::Process(locEntry); //Gets the data from the tree for the entry
-	if(Get_EventNumber()%100000==0) {cout << "RUN " << Get_RunNumber() << ", EVENT " << Get_EventNumber() << endl;}
 	//cout << "RUN " << Get_RunNumber() << ", EVENT " << Get_EventNumber() << endl;
 	//TLorentzVector locProductionX4 = Get_X4_Production();
 
@@ -244,7 +164,6 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 	if(locRunNumber != dPreviousRunNumber)
 	{
 		dIsPolarizedFlag = dAnalysisUtilities.Get_IsPolarizedBeam(locRunNumber, dIsPARAFlag);
-		dAnalysisUtilities.Get_PolarizationAngle(locRunNumber,  dPolarizationAngle); 
 		dPreviousRunNumber = locRunNumber;
 	}
 
@@ -298,7 +217,7 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 		if(dComboWrapper->Get_IsComboCut()) // Is false when tree originally created
 			continue; // Combo has been cut previously
 
-		double dMinKinFitCL = 1e-03; //throw out bad results within 1 percent of resolution
+		double dMinKinFitCL = 1e-03; //throw out bad results within 0.1 percent of resolution
 		double locKinFitConLev = dComboWrapper->Get_ConfidenceLevel_KinFit();
 		if(locKinFitConLev < dMinKinFitCL){
 			
@@ -312,17 +231,12 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 
 		//Step 0
 		Int_t locBeamID = dComboBeamWrapper->Get_BeamID();
-		Int_t locPiPlusTrackID = dPiPlusWrapper->Get_TrackID();
-		Int_t locPiMinusTrackID = dPiMinusWrapper->Get_TrackID();
 		Int_t locProtonTrackID = dProtonWrapper->Get_TrackID();
 
 		//Step 1
-		Int_t locPhoton1NeutralID = dPhoton1Wrapper->Get_NeutralID();
-		Int_t locPhoton2NeutralID = dPhoton2Wrapper->Get_NeutralID();
-
-		//Step 2
-		Int_t locPhoton3NeutralID = dPhoton3Wrapper->Get_NeutralID();
-		Int_t locPhoton4NeutralID = dPhoton4Wrapper->Get_NeutralID();
+		Int_t locPhotonNeutralID = dPhotonWrapper->Get_NeutralID();
+		Int_t locPiPlusTrackID = dPiPlusWrapper->Get_TrackID();
+		Int_t locPiMinusTrackID = dPiMinusWrapper->Get_TrackID();
 
 		/*********************************************** GET FOUR-MOMENTUM **********************************************/
 
@@ -331,36 +245,24 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 		//Step 0
 		TLorentzVector locBeamP4 = dComboBeamWrapper->Get_P4();
 		double BE = locBeamP4.E();
-
-		TLorentzVector locPiPlusP4 = dPiPlusWrapper->Get_P4();
-		TLorentzVector locPiMinusP4 = dPiMinusWrapper->Get_P4();
 		TLorentzVector locProtonP4 = dProtonWrapper->Get_P4();
 		//Step 1
-		TLorentzVector locDecayingPi0P4 = dDecayingPi0Wrapper->Get_P4();
-		TLorentzVector locPhoton1P4 = dPhoton1Wrapper->Get_P4();
-		TLorentzVector locPhoton2P4 = dPhoton2Wrapper->Get_P4();
-		//Step 2
-		TLorentzVector locDecayingEtaP4 = dDecayingEtaWrapper->Get_P4();
-		TLorentzVector locPhoton3P4 = dPhoton3Wrapper->Get_P4();
-		TLorentzVector locPhoton4P4 = dPhoton4Wrapper->Get_P4();
+		TLorentzVector locPhotonP4 = dPhotonWrapper->Get_P4();
+		TLorentzVector locPiPlusP4 = dPiPlusWrapper->Get_P4();
+		TLorentzVector locPiMinusP4 = dPiMinusWrapper->Get_P4();
 
 		// Get Measured P4's:
 		//Step 0
 		TLorentzVector locBeamP4_Measured = dComboBeamWrapper->Get_P4_Measured();
-		TLorentzVector locPiPlusP4_Measured = dPiPlusWrapper->Get_P4_Measured();
-		TLorentzVector locPiMinusP4_Measured = dPiMinusWrapper->Get_P4_Measured();
 		TLorentzVector locProtonP4_Measured = dProtonWrapper->Get_P4_Measured();
 		//Step 1
-		TLorentzVector locPhoton1P4_Measured = dPhoton1Wrapper->Get_P4_Measured();
-		TLorentzVector locPhoton2P4_Measured = dPhoton2Wrapper->Get_P4_Measured();
-		//Step 2
-		TLorentzVector locPhoton3P4_Measured = dPhoton3Wrapper->Get_P4_Measured();
-		TLorentzVector locPhoton4P4_Measured = dPhoton4Wrapper->Get_P4_Measured();
+		TLorentzVector locPhotonP4_Measured = dPhotonWrapper->Get_P4_Measured();
+		TLorentzVector locPiPlusP4_Measured = dPiPlusWrapper->Get_P4_Measured();
+		TLorentzVector locPiMinusP4_Measured = dPiMinusWrapper->Get_P4_Measured();
 
 		/********************************************* GET COMBO RF TIMING INFO *****************************************/
 
 		TLorentzVector locBeamX4_Measured = dComboBeamWrapper->Get_X4_Measured();
-		//Double_t locBunchPeriod = dAnalysisUtilities.Get_BeamBunchPeriod(Get_RunNumber());
 		Double_t locDeltaT_RF = dAnalysisUtilities.Get_DeltaT_RF(Get_RunNumber(), locBeamX4_Measured, dComboWrapper);
 
 		// calculate accidental subtraction weight based on time difference 
@@ -377,6 +279,8 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 
 
 		  }
+		//Double_t locBunchPeriod = dAnalysisUtilities.Get_BeamBunchPeriod(Get_RunNumber());
+		// Double_t locDeltaT_RF = dAnalysisUtilities.Get_DeltaT_RF(Get_RunNumber(), locBeamX4_Measured, dComboWrapper);
 		// Int_t locRelBeamBucket = dAnalysisUtilities.Get_RelativeBeamBucket(Get_RunNumber(), locBeamX4_Measured, dComboWrapper); // 0 for in-time events, non-zero integer for out-of-time photons
 		// Int_t locNumOutOfTimeBunchesInTree = 4; //YOU need to specify this number
 			//Number of out-of-time beam bunches in tree (on a single side, so that total number out-of-time bunches accepted is 2 times this number for left + right bunches) 
@@ -397,120 +301,23 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 
 		// Combine 4-vectors
 		//TLorentzVector locMissingP4_Measured = locBeamP4_Measured + dTargetP4;
-		//locMissingP4_Measured -= locPiPlusP4_Measured + locPiMinusP4_Measured + locProtonP4_Measured + locPhoton1P4_Measured + locPhoton2P4_Measured + locPhoton3P4_Measured + locPhoton4P4_Measured;
+		//locMissingP4_Measured -= locProtonP4_Measured + locPhotonP4_Measured + locPiPlusP4_Measured + locPiMinusP4_Measured;
 
-
-		TLorentzVector totalP4_Measured =  locBeamP4_Measured + dTargetP4;		
+		TLorentzVector totalP4_Measured =  locBeamP4_Measured + dTargetP4;	
 		TLorentzVector locMissingP4_Measured = totalP4_Measured - 
 		 (locPiPlusP4_Measured + locPiMinusP4_Measured + locProtonP4_Measured
-		  + locPhoton1P4_Measured + locPhoton2P4_Measured + locPhoton3P4_Measured + locPhoton4P4_Measured);
+		  + locPhotonP4_Measured );
 
-		TLorentzVector totalP4 =  locBeamP4 + dTargetP4;
+		TLorentzVector locpippim  = locPiPlusP4 + locPiMinusP4;
+		TLorentzVector locgpippim  = locPiPlusP4 + locPiMinusP4 + locPhotonP4;
 
+		TLorentzVector locpipp  = locPiPlusP4 + locProtonP4;
+		TLorentzVector locpimp  = locPiMinusP4 + locProtonP4;
+		TLorentzVector locpippimp  =  locPiPlusP4 + locPiMinusP4 + locProtonP4;
 
-		TLorentzVector locMissingP4 = totalP4 - 
-		 (locPiPlusP4 + locPiMinusP4 + locProtonP4
-		  + locPhoton1P4 + locPhoton2P4 + locPhoton3P4 + locPhoton4P4);
-
-
-
-		TLorentzVector locPhoton12 = locPhoton1P4 + locPhoton2P4;
-		TLorentzVector locpi0 = locPhoton1P4 + locPhoton2P4;
-		TLorentzVector locPhoton34 = locPhoton3P4 + locPhoton4P4;
-		TLorentzVector loceta = locPhoton3P4 + locPhoton4P4;
-
-		TLorentzVector locpeta = locProtonP4 + locPhoton3P4 + locPhoton4P4;
+		TLorentzVector loct = locBeamP4 - locgpippim;
 
 
-
-		TLorentzVector locPhoton12m = locPhoton1P4_Measured + locPhoton2P4_Measured;
-		TLorentzVector locPhoton34m = locPhoton3P4_Measured + locPhoton4P4_Measured;
-
-		TLorentzVector locetaprime = locPiPlusP4 + locPiMinusP4	+ locPhoton3P4 + locPhoton4P4;
-		TLorentzVector locetaprimem = locPiPlusP4_Measured + locPiMinusP4_Measured	+ locPhoton3P4_Measured + locPhoton4P4_Measured;
-
-		TLorentzVector locetaprimepi0 = locPiPlusP4 + locPiMinusP4	+ locPhoton3P4 + locPhoton4P4 + locPhoton1P4 + locPhoton2P4;
-		TLorentzVector locetaprimepi0m = locPiPlusP4_Measured + locPiMinusP4_Measured + 
-									locPhoton3P4_Measured + locPhoton4P4_Measured + locPhoton1P4_Measured + locPhoton2P4_Measured;
-
-
-		TLorentzVector locPhoton13 = locPhoton1P4 + locPhoton3P4;
-		TLorentzVector locPhoton14 = locPhoton1P4 + locPhoton4P4;
-		TLorentzVector locPhoton23 = locPhoton2P4 + locPhoton3P4;
-		TLorentzVector locPhoton24 = locPhoton2P4 + locPhoton4P4;
-
-		TLorentzVector locPhoton13m = locPhoton1P4_Measured + locPhoton3P4_Measured;
-		TLorentzVector locPhoton14m = locPhoton1P4_Measured + locPhoton4P4_Measured;
-		TLorentzVector locPhoton23m = locPhoton2P4_Measured + locPhoton3P4_Measured;
-		TLorentzVector locPhoton24m = locPhoton2P4_Measured + locPhoton4P4_Measured;
-
-		TLorentzVector locpippimpi0 = locPiPlusP4 + locPiMinusP4 + locPhoton1P4 + locPhoton2P4;
-		TLorentzVector locpippimpi0m = locPiPlusP4_Measured + locPiMinusP4_Measured + locPhoton1P4_Measured + locPhoton2P4_Measured;
-
-
-		TLorentzVector locpi0p = locProtonP4 + locPhoton1P4 + locPhoton2P4;
-		TLorentzVector locpi0pm = locProtonP4_Measured + locPhoton1P4_Measured + locPhoton2P4_Measured;
-
-		TLorentzVector loct = locBeamP4 - locetaprimepi0;
-		TLorentzVector loctm = locBeamP4_Measured - locetaprimepi0m;
-
-		
-
-
-		//costheta in GJ frame 
-		//redefine centre of mass 4-vectors to 4-vectors in rest frame of etaprimepi0 system
-   		TLorentzVector BeamP4_GJ = locBeamP4;
-   		TLorentzVector EtaPrimeP4_GJ = locetaprime;
-   		TLorentzVector Pi0P4_GJ = locpi0;
-   		TLorentzVector EtaPrimePi0P4_GJ = locetaprimepi0;
-
-		TVector3 boostGJ;
-
-  		TVector3 z_GJ;
-   		TVector3 z_hat_GJ;
-
-   		TVector3 y_GJ;
-   		TVector3 y_hat_GJ;
-
-   		TVector3 x_GJ;
-   		TVector3 x_hat_GJ;
-
-   		TVector3 vetaprime;
-
-
-		// boost to GJ Frame
-   		boostGJ = -(locetaprimepi0.Vect())*(1.0/locetaprimepi0.E()); //calculate beta for etaprimepi0 system
-
-		//boost in rest frame of etaprimepi0 system
-  		BeamP4_GJ.Boost(boostGJ);
-   		EtaPrimeP4_GJ.Boost(boostGJ);
-   		Pi0P4_GJ.Boost(boostGJ);
-		EtaPrimePi0P4_GJ.Boost(boostGJ);
-
-		z_GJ.SetXYZ(BeamP4_GJ.X(), BeamP4_GJ.Y(), BeamP4_GJ.Z());//z GJ
-		z_hat_GJ = z_GJ.Unit();  //beam direction (z-direction) 
-		
-		y_GJ = locBeamP4.Vect().Cross(locetaprimepi0.Vect());  //y-direction for rest frame of etaprimepi0 system
-   		y_hat_GJ = y_GJ.Unit();    
-
-		x_hat_GJ = y_hat_GJ.Cross(z_hat_GJ);//x hat GJ 
-
-		vetaprime.SetXYZ(EtaPrimeP4_GJ.Vect()*x_hat_GJ, EtaPrimeP4_GJ.Vect()*y_hat_GJ, EtaPrimeP4_GJ.Vect()*z_hat_GJ);
-
-
-		// costheta of resonace in CM frame
-		// get cm vector
-		TLorentzVector cm_vec = locBeamP4 + dTargetP4;
-		
-		// define etaprimepi0 4vector  in cm frame
-		TLorentzVector locetaprimepi0_cm = locetaprimepi0;
-
-		// get the beta through boostvector and boost in cm frame
-		locetaprimepi0_cm.Boost(-cm_vec.BoostVector());
-
-		//get the costhetaXcm
-		costheta_X_cm = locetaprimepi0_cm.CosTheta();
-		
 
 
 
@@ -540,7 +347,7 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 		//Histogram beam energy (if haven't already)
 		//if(locUsedSoFar_BeamEnergy.find(locBeamID) == locUsedSoFar_BeamEnergy.end())
 		//{
-			//dHist_BeamEnergy->Fill(locBeamP4.E()); // Fills in-time and out-of-time beam photon combos
+		//	dHist_BeamEnergy->Fill(locBeamP4.E()); // Fills in-time and out-of-time beam photon combos
 			//dHist_BeamEnergy->Fill(locBeamP4.E(),locHistAccidWeightFactor); // Alternate version with accidental subtraction
 
 		//	locUsedSoFar_BeamEnergy.insert(locBeamID);
@@ -549,120 +356,26 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 		/************************************ EXAMPLE: HISTOGRAM MISSING MASS SQUARED ************************************/
 
 		//Missing Mass Squared
+		//double locMissingMassSquared = locMissingP4_Measured.M2();
+		mm2m = locMissingP4_Measured.M2();
+		mpippim = locpippim.M();
+		mgpippim = locgpippim.M();
+		mpipp = locpipp.M();
+		mpimp = locpimp.M();
+		mpippimp = locpippimp.M();
+		dt = locDeltaT_RF;
+		be = BE;
+		mant = (-1)*loct.M2();
 		
-
-		
-		
-
-		//define vairables for qfactortree
-
-		 /*
-		 mm2 = locMissingP4.M2();
-		 mpi0 = locPhoton12.M();
-		 meta = locPhoton34.M();
-		 
-		 mpippimpi0m = locpippimpi0m.M();
-		 mpi0m= locPhoton12m.M();
-		 mpi013m = locPhoton13m.M();
-		 mpi014m = locPhoton14m.M();
-		 mpi023m = locPhoton23m.M();
-		 mpi024m = locPhoton24m.M();
-		 metam = locPhoton34m.M();
-		 metapm = locetaprimem.M();
-		 metappi0m = locetaprimepi0m.M();
-		 mpi0pm = locpi0pm.M();
-		 
-
-		 
-		 mantm = (-1)*loctm.M2();
-		 
-		
-
-		
-		pol = dPolarizationAngle; 
-
-		px_pr = locProtonP4.Px(); 
-		 px_etapr = locetaprime.Px();
-		 px_pi0 = locPhoton12.Px();
-		
-
-
-		 py_pr = locProtonP4.Py();
-		 py_etapr = locetaprime.Py();
-		 py_pi0 = locPhoton12.Py();
-		
-
-		 pz_pr = locProtonP4.Pz();
-		 pz_etapr = locetaprime.Pz();
-		 pz_pi0 = locPhoton12.Pz();
-		
-
-
-		 e_pr = locProtonP4.E();
-		 e_etapr = locetaprime.E();
-		 e_pi0 = locPhoton12.E();
-		
-
-		 px_beam = locBeamP4.Px();
-		 py_beam = locBeamP4.Py();
-		 pz_beam = locBeamP4.Pz();
-		 e_beam = locBeamP4.E();
-
-
-
-		chisq = dComboWrapper->Get_ChiSq_KinFit();  //cout <<  chisq << "chisq" << endl;
-		ndf = dComboWrapper->Get_NDF_KinFit();     //cout <<  ndf << "ndf" << endl;
-		chisq_ndf = chisq/ndf;                     //cout << chisq_ndf << "chisq/ndf" << endl;
-
-		
-
-		event_num = Get_EventNumber();
-		run_num = locRunNumber;
-		*/
-		
-		 mm2m = locMissingP4_Measured.M2();
-		 
-		 mpi013 = locPhoton13.M();
-		 mpi014 = locPhoton14.M();
-		 mpi023 = locPhoton23.M();
-		 mpi024 = locPhoton24.M();
-		 
-		 metap = locetaprime.M();
-		 metappi0 = locetaprimepi0.M();
-		 mpippimpi0 = locpippimpi0.M();
-		 mpi0p = locpi0p.M();
-		 dt = locDeltaT_RF;
-		 be = BE;
-		 mant = (-1)*loct.M2();
-		 photon1_sq = dPhoton1Wrapper->Get_Shower_Quality();
-		 photon2_sq = dPhoton2Wrapper->Get_Shower_Quality();
-		 photon3_sq = dPhoton3Wrapper->Get_Shower_Quality();
-		 photon4_sq = dPhoton4Wrapper->Get_Shower_Quality();
-		 mproeta = locpeta.M();
-		 //get costhetat in GJ
-   		cos_t = vetaprime.CosTheta();
-		Double_t pi = 3.14159;
-		phi_gj = vetaprime.Phi() * (180/pi);
-
-
-
-		
-
-
-
-
 
 		//Uniqueness tracking: Build the map of particles used for the missing mass
 			//For beam: Don't want to group with final-state photons. Instead use "Unknown" PID (not ideal, but it's easy).
 		map<Particle_t, set<Int_t> > locUsedThisCombo_MissingMass;
 		locUsedThisCombo_MissingMass[Unknown].insert(locBeamID); //beam
+		locUsedThisCombo_MissingMass[Proton].insert(locProtonTrackID);
+		locUsedThisCombo_MissingMass[Gamma].insert(locPhotonNeutralID);
 		locUsedThisCombo_MissingMass[PiPlus].insert(locPiPlusTrackID);
 		locUsedThisCombo_MissingMass[PiMinus].insert(locPiMinusTrackID);
-		locUsedThisCombo_MissingMass[Proton].insert(locProtonTrackID);
-		locUsedThisCombo_MissingMass[Gamma].insert(locPhoton1NeutralID);
-		locUsedThisCombo_MissingMass[Gamma].insert(locPhoton2NeutralID);
-		locUsedThisCombo_MissingMass[Gamma].insert(locPhoton3NeutralID);
-		locUsedThisCombo_MissingMass[Gamma].insert(locPhoton4NeutralID);
 
 		//compare to what's been used so far
 		if(locUsedSoFar_MissingMass.find(locUsedThisCombo_MissingMass) == locUsedSoFar_MissingMass.end())
@@ -671,37 +384,12 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 			//dHist_MissingMassSquared->Fill(locMissingMassSquared); // Fills in-time and out-of-time beam photon combos
 			//dHist_MissingMassSquared->Fill(locMissingMassSquared,locHistAccidWeightFactor); // Alternate version with accidental subtraction
 
-			
-			Bool_t coherentbeam = (be > 8.2) && (be < 8.8);
+			Bool_t coherentbeam = (BE > 8.2) && (BE < 8.8);
 			Bool_t MissingMassSquaredcut = (mm2m > -0.02) && (mm2m < 0.02);
 
-			Bool_t etaprimemasswindow = (metap > 0.85) && (metap < 1.05);
-			Bool_t twindow = (mant > 0.1) && (mant < 0.7);
+			if(MissingMassSquaredcut && coherentbeam && !locAccid)
 
-			Bool_t pi013 = ((mpi013 > 0.10) && (mpi013 < 0.175)); 
-			Bool_t pi024 = ((mpi024 > 0.10) && (mpi024 < 0.175));
-			Bool_t pi014 = ((mpi014 > 0.10) && (mpi014 < 0.175));
-			Bool_t pi023 = ((mpi023 > 0.10) && (mpi023 < 0.175));
-			Bool_t omega = (mpippimpi0 > 0.73) && (mpippimpi0 < 0.83);
-			Bool_t pi0p_deltap = mpi0p < 1.4;
-
-			
-		/*if(MissingMassSquaredcut && coherentbeam && !locAccid &&  etaprimemasswindow && twindow && //selection cuts
-
-			!((pi013 && pi024) || (pi014 && pi023)) && 									  //veto cuts
-			!(pi0p_deltap) &&
-			!(omega) )*/
-			
-			if(MissingMassSquaredcut && coherentbeam && !locAccid && twindow && etaprimemasswindow)
-			{qfactortree->Fill();}
-
-			//if(MissingMassSquaredcut && coherentbeam && !locAccid &&  etaprimemasswindow && twindow)
-
-			
-
-
-
-
+			{Tree_etapr_gpippim->Fill();}
 
 			locUsedSoFar_MissingMass.insert(locUsedThisCombo_MissingMass);
 		}
@@ -802,7 +490,7 @@ Bool_t DSelector_pi0pippimeta::Process(Long64_t locEntry)
 	return kTRUE;
 }
 
-void DSelector_pi0pippimeta::Finalize(void)
+void DSelector_etapr__etapr_gpippim__B4_M35::Finalize(void)
 {
 	//Save anything to output here that you do not want to be in the default DSelector output ROOT file.
 
@@ -814,7 +502,7 @@ void DSelector_pi0pippimeta::Finalize(void)
 	//DO YOUR STUFF HERE
 
 	fileout->cd(); 
-	qfactortree->Write();
+	Tree_etapr_gpippim->Write();
 
 	fileout->Close();
 

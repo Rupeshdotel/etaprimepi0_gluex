@@ -115,6 +115,8 @@ class DSelector_pi0pippimeta : public DSelector
 		Double_t photon3_sq;
 		Double_t photon4_sq;
 
+		Double_t mproeta;
+
 		Double_t cos_t;
 		Double_t costheta_X_cm;
 		

@@ -97,10 +97,10 @@ void DSelector_pi0pippimeta_18::Init(TTree *locTree)
 	dTreeInterface->Create_Branch_ClonesArray<TLorentzVector>("my_p4_array");
 	*/
 
-	qfactortree->Branch("event_num", &event_num, "event_num/I");
-	qfactortree->Branch("run_num", &run_num, "run_num/I");
-
+	
+	/*
 	qfactortree->Branch("mm2", &mm2, "mm2/D");
+
 	qfactortree->Branch("mm2m", &mm2m, "mm2m/D");
 	qfactortree->Branch("dt", &dt, "dt/D");
 	qfactortree->Branch("be", &be, "be/D");
@@ -126,6 +126,7 @@ void DSelector_pi0pippimeta_18::Init(TTree *locTree)
 	qfactortree->Branch("mpi024m", &mpi024m, "mpi024m/D");
 
 	qfactortree->Branch("mpippimpi0", &mpippimpi0, "mpippimpi0/D");
+	qfactortree->Branch("mproeta", &mproeta, "mproeta/D");
 	qfactortree->Branch("mpippimpi0m", &mpippimpi0m, "mpippimpi0m/D");
 
 	qfactortree->Branch("mpi0p", &mpi0p, "mpi0p/D");
@@ -169,6 +170,30 @@ void DSelector_pi0pippimeta_18::Init(TTree *locTree)
 
 	qfactortree->Branch("event_num", &event_num, "event_num/I");
 	qfactortree->Branch("run_num", &run_num, "run_num/I");
+		*/
+
+	qfactortree->Branch("mm2m", &mm2m, "mm2m/D");
+	qfactortree->Branch("dt", &dt, "dt/D");
+	qfactortree->Branch("be", &be, "be/D");
+	qfactortree->Branch("mpi013", &mpi013, "mpi013/D");
+	qfactortree->Branch("mpi014", &mpi014, "mpi014/D");
+	qfactortree->Branch("mpi023", &mpi023, "mpi023/D");
+	qfactortree->Branch("mpi024", &mpi024, "mpi024/D");
+
+	
+	qfactortree->Branch("metap", &metap, "metap/D");
+	qfactortree->Branch("metappi0", &metappi0, "metappi0/D");
+	qfactortree->Branch("mpippimpi0", &mpippimpi0, "mpippimpi0/D");
+	qfactortree->Branch("mproeta", &mproeta, "mproeta/D");
+	qfactortree->Branch("mpi0p", &mpi0p, "mpi0p/D");
+	qfactortree->Branch("mant", &mant, "mant/D");
+	qfactortree->Branch("photon1_sq", &photon1_sq, "photon1_sq/D");
+	qfactortree->Branch("photon2_sq", &photon2_sq, "photon2_sq/D");
+	qfactortree->Branch("photon3_sq", &photon3_sq, "photon3_sq/D");
+	qfactortree->Branch("photon4_sq", &photon4_sq, "photon4_sq/D");
+	qfactortree->Branch("cos_t", &cos_t, "cos_t/D");
+	qfactortree->Branch("costheta_X_cm", &costheta_X_cm, "costheta_X_cm/D");
+	qfactortree->Branch("phi_gj", &phi_gj, "phi_gj/D");
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - FLAT TREE *************************/
 
@@ -195,7 +220,7 @@ void DSelector_pi0pippimeta_18::Init(TTree *locTree)
 	//dTreeInterface->Register_GetEntryBranch("Proton__P4"); //manually set the branches you want
 
 	/************************************** DETERMINE IF ANALYZING SIMULATED DATA *************************************/
-
+ 
 	//dIsMC = (dTreeInterface->Get_Branch("MCWeight") != NULL);
 
 }
@@ -405,6 +430,8 @@ Bool_t DSelector_pi0pippimeta_18::Process(Long64_t locEntry)
 		TLorentzVector locPhoton34 = locPhoton3P4 + locPhoton4P4;
 		TLorentzVector loceta = locPhoton3P4 + locPhoton4P4;
 
+		TLorentzVector locpeta = locProtonP4 + locPhoton3P4 + locPhoton4P4;
+
 		TLorentzVector locPhoton12m = locPhoton1P4_Measured + locPhoton2P4_Measured;
 		TLorentzVector locPhoton34m = locPhoton3P4_Measured + locPhoton4P4_Measured;
 
@@ -536,18 +563,12 @@ Bool_t DSelector_pi0pippimeta_18::Process(Long64_t locEntry)
 		double locMissingMassSquared = locMissingP4_Measured.M2();
 		//define vairables for qfactortree
 
-		 mm2m = locMissingP4_Measured.M2();
+		 /*
 		 mm2 = locMissingP4.M2();
+
 		 mpi0 = locPhoton12.M();
-		 mpi013 = locPhoton13.M();
-		 mpi014 = locPhoton14.M();
-		 mpi023 = locPhoton23.M();
-		 mpi024 = locPhoton24.M();
 		 meta = locPhoton34.M();
-		 metap = locetaprime.M();
-		 metappi0 = locetaprimepi0.M();
-		 mpippimpi0 = locpippimpi0.M();
-		 mpi0p = locpi0p.M();
+		
 		 mpippimpi0m = locpippimpi0m.M();
 		 mpi0m= locPhoton12m.M();
 		 mpi013m = locPhoton13m.M();
@@ -558,25 +579,14 @@ Bool_t DSelector_pi0pippimeta_18::Process(Long64_t locEntry)
 		 metapm = locetaprimem.M();
 		 metappi0m = locetaprimepi0m.M();
 		 mpi0pm = locpi0pm.M();
-		 dt = locDeltaT_RF;
-		 be = BE;
-
-		 mant = (-1)*loct.M2();
+		 
 		 mantm = (-1)*loctm.M2();
 		 
-		photon1_sq = dPhoton1Wrapper->Get_Shower_Quality();
-		photon2_sq = dPhoton2Wrapper->Get_Shower_Quality();
-		photon3_sq = dPhoton3Wrapper->Get_Shower_Quality();
-		photon4_sq = dPhoton4Wrapper->Get_Shower_Quality();
+		
 
 		//get costhetat in GJ
-   		cos_t = vetaprime.CosTheta();
-		Double_t pi = 3.14159;
-		phi_gj = vetaprime.Phi() * (180/pi); 
+   		
 		pol = dPolarizationAngle; 
-
-		event_num = Get_EventNumber();
-		run_num = locRunNumber;
 
 		 px_pr = locProtonP4.Px(); 
 		 px_etapr = locetaprime.Px();
@@ -605,6 +615,38 @@ Bool_t DSelector_pi0pippimeta_18::Process(Long64_t locEntry)
 		 pz_beam = locBeamP4.Pz();
 		 e_beam = locBeamP4.E();
 
+
+		chisq = dComboWrapper->Get_ChiSq_KinFit();  //cout <<  chisq << "chisq" << endl;
+		ndf = dComboWrapper->Get_NDF_KinFit();     //cout <<  ndf << "ndf" << endl;
+		chisq_ndf = chisq/ndf;                     //cout << chisq_ndf << "chisq/ndf" << endl;
+		event_num = Get_EventNumber();
+		run_num = locRunNumber;
+		*/
+		
+		mm2m = locMissingP4_Measured.M2();
+		 
+		 mpi013 = locPhoton13.M();
+		 mpi014 = locPhoton14.M();
+		 mpi023 = locPhoton23.M();
+		 mpi024 = locPhoton24.M();
+		 
+		 metap = locetaprime.M();
+		 metappi0 = locetaprimepi0.M();
+		 mpippimpi0 = locpippimpi0.M();
+		 mpi0p = locpi0p.M();
+		 dt = locDeltaT_RF;
+		 be = BE;
+		 mant = (-1)*loct.M2();
+		 mproeta = locpeta.M();
+		 photon1_sq = dPhoton1Wrapper->Get_Shower_Quality();
+		 photon2_sq = dPhoton2Wrapper->Get_Shower_Quality();
+		 photon3_sq = dPhoton3Wrapper->Get_Shower_Quality();
+		 photon4_sq = dPhoton4Wrapper->Get_Shower_Quality();
+		 cos_t = vetaprime.CosTheta();
+		 Double_t pi = 3.14159;
+		 phi_gj = vetaprime.Phi() * (180/pi); 
+
+		 
 
 		//Uniqueness tracking: Build the map of particles used for the missing mass
 			//For beam: Don't want to group with final-state photons. Instead use "Unknown" PID (not ideal, but it's easy).
@@ -640,13 +682,15 @@ Bool_t DSelector_pi0pippimeta_18::Process(Long64_t locEntry)
 			Bool_t omega = (mpippimpi0 > 0.73) && (mpippimpi0 < 0.83);
 			Bool_t pi0p_deltap = mpi0p < 1.4;
 
+			/*
 			if(MissingMassSquaredcut && coherentbeam && !locAccid &&  etaprimemasswindow && twindow && //selection cuts
 
 			!((pi013 && pi024) || (pi014 && pi023)) && 									  //veto cuts
 			!(pi0p_deltap) &&
 			!(omega) )
-
-			//if(MissingMassSquaredcut && coherentbeam && !locAccid &&  etaprimemasswindow && twindow)
+			*/
+			
+			if(MissingMassSquaredcut && coherentbeam && !locAccid && twindow && etaprimemasswindow)
 			{qfactortree->Fill();}
 
 			locUsedSoFar_MissingMass.insert(locUsedThisCombo_MissingMass);

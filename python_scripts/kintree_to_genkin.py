@@ -20,7 +20,8 @@ from ROOT import TVector3
 
 
 #%%
-rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/genamp_gen_resonance.root")
+#rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/genamp_gen_resonance.root")
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/GlueXI_pol0_for_PWA_updated.root")
 
 #%%
 
@@ -71,8 +72,8 @@ def get_gen_kin(rootfile):
     x_hat_GJ = TVector3()
     vetaprime = TVector3() 
     
-    #for i in range(len(Px)):
-    for i in range(100):
+    for i in range(len(Px)):
+    #for i in range(100):
         #m = np.sqrt(E[i][0]**2 - (Px[i][0]**2 + Py[i][0]**2 + Pz[i][0]**2))
         #metap[i] = m
         
@@ -122,9 +123,10 @@ def get_gen_kin(rootfile):
         metaprimepi0[i] = Etaprimepi0_P4.M()
         beam_energy[i] = Beam_P4.E()
         
-        
     
-    return np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/gen_events.npz', 
+   
+    
+    return np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/check_events.npz', 
                     mproton = mproton,
                     metap = metap, 
                     mpi0 = mpi0, 

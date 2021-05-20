@@ -17,11 +17,168 @@ import matplotlib.pyplot as plt
 
 #load the qtree file
 #rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qtree.root")
-rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree_17.root")
+rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/qfactortree/qfactortree_cons_tree_kinfit_variables_17_18_phi.root")
 #rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/accep_mctree.root")
 #rfile = R.TFile("/Users/rupeshdotel/analysis/work/pi0pippimeta/data/MC/gen_mctree.root")
 intree = rfile.Get('qfactortree')
 d = tree2array(intree)
+
+#%%
+
+
+
+# required only for data, to do qfactor analysis
+#mpi0 = d['pi0mass']
+#meta = d['etamass']
+#metap = d['etaprimemass']
+
+#metappi0 = d['etaprimepi0mass']
+#cost_etap = d['etaprimecosthetaGJ']
+
+#mpi013 = d['pi0mass13']
+#mpi024 = d['pi0mass24']
+#mpi014 = d['pi0mass14']
+#mpi023 = d['pi0mass23']
+#mpipp = d['pipp']
+#mpi0p = d['pi0p']
+#mpippimpi0 = d['pippimpi0']
+
+
+
+
+
+#cost_pi0 = d['pi0costhetaGJ']
+#pi0phiGJ = d['pi0phiGJ']
+#etaprimephiGJ = d['etaprimephiGJ']
+#acc_w = d['time_weights']
+#cost_pi0_GJpi0p = d['cost_pi0']
+
+#following vairbales are enough for signal MC 
+
+mpi0 = d['mpi0']
+meta = d['meta']
+metap = d['metap']
+
+
+
+
+metappi0 = d['metappi0']
+cost_etap_gj = d['cos_t']
+phi_etap_gj = d['phi_gj']
+
+
+
+mpi013 = d['mpi013']
+mpi024 = d['mpi024']
+mpi014 = d['mpi014']
+mpi023 = d['mpi023']
+
+
+mpi0p = d['mpi0p']
+mpippimpi0 = d['mpippimpi0']
+
+event_num = d['event_num']
+run_num = d['run_num']
+
+pol = d['pol']
+
+
+dt = d['dt']
+mant = d['mant']
+
+
+
+photon1_sq = d['photon1_sq']
+photon2_sq = d['photon2_sq']
+photon3_sq = d['photon3_sq']
+photon4_sq = d['photon4_sq']
+
+
+px_pr = d['px_pr']
+px_etapr = d['px_etapr']
+px_pi0 = d['px_pi0']
+
+py_pr = d['py_pr']
+py_etapr = d['py_etapr']
+py_pi0 = d['py_pi0']
+
+pz_pr = d['pz_pr']
+pz_etapr = d['pz_etapr']
+pz_pi0 = d['pz_pi0']
+
+e_pr = d['e_pr']
+e_etapr = d['e_etapr']
+e_pi0 = d['e_pi0'];
+
+px_beam = d['px_beam']
+py_beam = d['py_beam']
+pz_beam = d['pz_beam']
+e_beam = d['e_beam']
+
+
+
+#%%
+
+#sort evens by polarization of beam
+"""
+sel_0 = pol == 0
+sel_90 = pol == 90
+sel_45 = pol == 45
+sel_135 = pol == 135
+
+
+#i is the polarization angle, can be 0, 45, 90 135
+i = sel_0 | sel_90 | sel_45 | sel_135
+pol = pol[i]
+event_num = event_num[i]
+run_num = run_num[i]
+"""
+#i = 100000
+
+dt = dt[:]
+mant = mant[:]
+
+photon1_sq = photon1_sq[:]
+photon2_sq = photon2_sq[:]
+photon3_sq = photon3_sq[:]
+photon4_sq = photon4_sq[:]
+
+
+px_pr = px_pr[:]
+px_etapr = px_etapr[:]
+px_pi0 = px_pi0[:]
+
+py_pr = py_pr[:]
+py_etapr = py_etapr[:]
+py_pi0 = py_pi0[:]
+
+pz_pr = pz_pr[:]
+pz_etapr = pz_etapr[:]
+pz_pi0 = pz_pi0[:]
+
+e_pr = e_pr[:]
+e_etapr = e_etapr[:]
+e_pi0 = e_pi0[:]
+
+px_beam = px_beam[:]
+py_beam = py_beam[:]
+pz_beam = pz_beam[:]
+e_beam = e_beam[:]
+
+
+mpi0 = mpi0[:]
+meta = meta[:]
+metap = metap[:]
+
+metappi0 = metappi0[:]
+cost_etap = cost_etap[:]
+
+
+#%%
+
+'''
+
+mis_mass2_m = d['mis_mass2_m']
 
 event_num = d['event_num']
 kinfit_CL = d['kinfit_CL']
@@ -29,47 +186,8 @@ chisq_ndf = d['chisq_ndf']
 num_combos = d['num_combos']
 combo_number = d['combo_number']
 
-
-mpi0 = d['pi0mass']
-meta = d['etamass']
-metap = d['etaprimemass']
-
-metappi0 = d['etaprimepi0mass']
-
-mpi013 = d['pi0mass13']
-mpi024 = d['pi0mass24']
-mpi014 = d['pi0mass14']
-mpi023 = d['pi0mass23']
-
-mant = d['mant']
-
-
-
 num_unusedshowers = d['num_unusedshowers']
 
-mpipp = d['pipp']
-mpi0p = d['pi0p']
-mpippimpi0 = d['pippimpi0']
-
-cost_pi0 = d['pi0costhetaGJ']
-pi0phiGJ = d['pi0phiGJ']
-
-cost_etap = d['etaprimecosthetaGJ']
-etaprimephiGJ = d['etaprimephiGJ']
-
-photon1_sq = d['photon1_sq']
-photon2_sq = d['photon2_sq']
-photon3_sq = d['photon3_sq']
-photon4_sq = d['photon4_sq']
-
-acc_w = d['time_weights']
-
-cost_pi0_GJpi0p = d['cost_pi0']
-
-dt = d['dt']
-mis_mass2_m = d['mis_mass2_m']
-
-'''
 mis_mass2_m = d['mis_mass2_m']
 t_etap = d['t_etap']
 pt_p = d['pt_p']; 
@@ -86,7 +204,7 @@ pl_pi0 = d['pl_pi0'];
 c_par = B.LT.parameterfile.pfile('/Users/rupeshdotel/analysis/work/gluexgit/data_files/data/parameters5.data')
 
 # load the parameters values
-mm2_min = c_par.get_value('mm2_min'); mm2_max =  c_par.get_value('mm2_max') 
+#mm2_min = c_par.get_value('mm2_min'); mm2_max =  c_par.get_value('mm2_max') 
 
 mpi0_min = c_par.get_value('mpi0_min'); mpi0_max =  c_par.get_value('mpi0_max') 
 meta_min = c_par.get_value('meta_min'); meta_max =  c_par.get_value('meta_max') 
@@ -94,24 +212,11 @@ metap_min = c_par.get_value('metap_min'); metap_max =  c_par.get_value('metap_ma
 
 veto_2pi0_min = c_par.get_value('twopi0veto_min'); veto_2pi0_max = c_par.get_value('twopi0veto_max') 
 mpippimpi0_min = c_par.get_value('mpippimpi0_min'); mpippimpi0_max =  c_par.get_value('mpippimpi0_max')
-meta_for_omega_min = c_par.get_value('meta_for_omega_min'); meta_for_omega_max = c_par.get_value('meta_for_omega_max') 
-
-dt_min = c_par.get_value('dt_min'); dt_max = c_par.get_value('dt_max')
-
-
-t_min = c_par.get_value('mant_min'); t_max = c_par.get_value('mant_max')
-
-sq_min = c_par.get_value('sq_min'); sq_max = c_par.get_value('sq_max')
-
 mpi0p_min = c_par.get_value('mpi0p_min'); mpi0p_max =  c_par.get_value('mpi0p_max') 
+#meta_for_omega_min = c_par.get_value('meta_for_omega_min'); meta_for_omega_max = c_par.get_value('meta_for_omega_max')
 
-extrashowers_min = c_par.get_value('extrashowers_min')
-extrashowers_max = c_par.get_value('extrashowers_max')
-
-# select windows for variables
-
-#mm2 = B.in_between(mm2_min, mm2_max, mis_mass2_m) #missingmass_squared_window
-pi0 = B.in_between(mpi0_min, mpi0_max,  mpi0) #pi0window
+#pi0 = B.in_between(mpi0_min, mpi0_max,  mpi0) #pi0window
+pi0 = B.in_between(mpi0_min,  mpi0_min, mpi0) #pi0window
 eta = B.in_between(meta_min, meta_max,  meta) #etawindow
 etap = B.in_between(metap_min, metap_max,  metap) #etaprimewindow
 
@@ -120,7 +225,27 @@ pi024 = B.in_between(veto_2pi0_min, veto_2pi0_max, mpi024)
 pi014 = B.in_between(veto_2pi0_min, veto_2pi0_max, mpi014)
 pi023 = B.in_between(veto_2pi0_min, veto_2pi0_max, mpi023)
 
-omega = B.in_between(mpippimpi0_min, mpippimpi0_max, mpippimpi0) #omega window
+omega = B.in_between(mpippimpi0_min, mpippimpi0_max, mpippimpi0) #omega window 
+pi0p = B.in_between(mpi0p_min, mpi0p_max, mpi0p) # pi0p window
+
+
+
+dt_min = c_par.get_value('dt_min'); dt_max = c_par.get_value('dt_max')
+
+
+t_min = c_par.get_value('mant_min'); t_max = c_par.get_value('mant_max')
+
+sq_min = c_par.get_value('sq_min'); sq_max = c_par.get_value('sq_max')
+
+
+
+#extrashowers_min = c_par.get_value('extrashowers_min')
+#extrashowers_max = c_par.get_value('extrashowers_max')
+
+# select windows for variables
+
+#mm2 = B.in_between(mm2_min, mm2_max, mis_mass2_m) #missingmass_squared_window
+
 #eta_for_omega = B.in_between(meta_for_omega_min, meta_for_omega_max,  meta) #etawindow
 
 t = B.in_between(t_min, t_max,  mant) # momentum transfer window
@@ -132,23 +257,28 @@ showerqual_2 =   B.in_between(sq_min, sq_max,  photon2_sq)
 showerqual_3 =   B.in_between(sq_min, sq_max,  photon3_sq)
 showerqual_4 =   B.in_between(sq_min, sq_max,  photon4_sq)
 
-ex_showers = B.in_between(extrashowers_min, extrashowers_max, num_unusedshowers) # extra showers window
+#ex_showers = B.in_between(extrashowers_min, extrashowers_max, num_unusedshowers) # extra showers window
 
 
 #events that have all photons > 0.5 for shower quality variable
 quality_photons = showerqual_1 & showerqual_2 & showerqual_3 & showerqual_4
 
-pi0p = B.in_between(mpi0p_min, mpi0p_max, mpi0p) # pi0p window
+
 
 
 #combine selection windows in increasing complexity
 #sel_win =  pi0 & eta & etap & intime
 #sel_win =  pi0 & eta & etap & intime & t  
-sel_win =  pi0 & eta & etap & intime &  t  
+#sel_win =  pi0 & eta & etap & intime &  t  
 #sel_win =  pi0 & eta & etap &  intime & t & quality_photons 
 #sel_win =  pi0 & eta & etap & t & quality_photons & ex_showers
 #sel_win =   pi0 & eta & intime & t  
 #sel_win =  pi0 & eta & etap &  t & quality_photons 
+#sel_win =  intime & t & quality_photons 
+#sel_win = pi0 & eta & etap & intime &  t & quality_photons 
+#sel_win =  quality_photons 
+
+sel_win  = t &  quality_photons 
 
 #choose 2pi0 veto logic
 veto_2pi0 = ~ ( (pi013 & pi024) | (pi014 & pi023) )
@@ -161,15 +291,16 @@ veto_omega = ~(omega)
 veto_deltap = ~(pi0p)
 
 # combine vetos in increasing complexity
-veto = veto_2pi0
+#veto = veto_2pi0
 #veto = veto_2pi0 & veto_omega
-#veto = veto_2pi0 & veto_omega & veto_deltap
+veto = veto_2pi0 & veto_omega & veto_deltap
 
 # combine veto and selection windows
 #sel  = sel_win
 sel =  sel_win &  veto 
 #sel =  veto 
-
+#sel = sel_win
+ 
 #%%
 #define histograms
 
@@ -258,50 +389,86 @@ plt.figure();h2_ep_cost.plot()
 #%%
 
 
-np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_17_acc_sub.npz',
+np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/variables_test_for_qfactor_be_t_phi.npz',
          
-         
+            #1) for data only
+            #for selection unique combos
             event_num = event_num[sel],
-            kinfit_CL = kinfit_CL[sel],
-            chisq_ndf = chisq_ndf[sel],
-            num_combos = num_combos[sel],
-            combo_number = combo_number[sel],
+            run_num = run_num[sel],
+            pol = pol[sel],
+         
+            #use m variables and cost for data only to do q factors
             mpi0 = mpi0[sel],
             meta = meta[sel],
             metap = metap[sel],
-            
             metappi0 = metappi0[sel],
+            cost_etap_gj = cost_etap[sel],
+            phi_etap_gj = phi_etap_gj[sel],
             
-            mpi013 = mpi013[sel],
-            mpi024 = mpi024[sel],
-            mpi014 = mpi014[sel],
-            mpi023 = mpi023[sel],
+            #2) required for both MC and data
+            
+            px_pr = px_pr[sel],
+            px_etapr = px_etapr[sel],
+            px_pi0 = px_pi0[sel],
+
+            py_pr = py_pr[sel],
+            py_etapr = py_etapr[sel],
+            py_pi0 = py_pi0[sel],
+
+            pz_pr = pz_pr[sel],
+            pz_etapr = pz_etapr[sel],
+            pz_pi0 = pz_pi0[sel],
+
+            e_pr = e_pr[sel],
+            e_etapr = e_etapr[sel],
+            e_pi0 = e_pi0[sel],
+
+            px_beam = px_beam[sel],
+            py_beam = py_beam[sel],
+            pz_beam = pz_beam[sel],
+            e_beam = e_beam[sel],
+            
+            mant = mant[sel]
+            
+           
             
             
-            mant = mant[sel],
-            num_unusedshowers = num_unusedshowers[sel],
-            
-            mpipp = mpipp[sel],
-            mpi0p = mpi0p[sel],
-            mpippimpi0 = mpippimpi0[sel],
-            
-            cost_pi0 = cost_pi0[sel],
-            pi0phiGJ = pi0phiGJ[sel],
-            
-            cost_etap = cost_etap[sel],
-            etaprimephiGJ = etaprimephiGJ[sel],
-            
-            photon1_sq = photon1_sq[sel],
-            photon2_sq = photon2_sq[sel],
-            photon3_sq = photon3_sq[sel],
-            photon4_sq = photon4_sq[sel],
-            
-           acc_w = acc_w[sel]
-            
-            
-            )
+           )
 
 '''
+
+photon1_sq = photon1_sq[sel]
+photon2_sq = photon2_sq[sel]
+photon3_sq = photon3_sq[sel]
+photon4_sq = photon4_sq[sel]
+
+
+mpi013 = mpi013[sel]
+mpi024 = mpi024[sel]
+mpi014 = mpi014[sel]
+mpi023 = mpi023[sel]
+            
+            
+mant = mant[sel]
+
+mpi0p = mpi0p[sel]
+mpippimpi0 = mpippimpi0[sel]
+
+
+
+
+event_num = event_num[sel]
+kinfit_CL = kinfit_CL[sel]
+chisq_ndf = chisq_ndf[sel]
+num_combos = num_combos[sel]
+combo_number = combo_number[sel]
+num_unusedshowers = num_unusedshowers[sel]
+mpipp = mpipp[sel]
+cost_pi0 = cost_pi0[sel]
+pi0phiGJ = pi0phiGJ[sel]
+acc_w = acc_w[sel]
+
+etaprimephiGJ = etaprimephiGJ[sel],
 t_etap = t_etap[sel]
 pt_p = pt_p[sel]
 pt_etap = pt_etap[sel]

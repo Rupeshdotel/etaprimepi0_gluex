@@ -33,7 +33,10 @@ def signal(x):
 
 #%%
 #d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluex_unique_cons_17_18.npz')
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/variables_test_for_qfactor_be_t_phi.npz')
+
+#d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/variables_test_for_qfactor_be_t_phi.npz')
+
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluex_unique_cons_17_18_updated_for_phi_t.npz')
 
 metap = d['metap']
 metappi0 = d['metappi0']
@@ -111,9 +114,9 @@ def fit_draw_histo(h2d, Fit = False):
         h_xproj = h2d.project_x(bins=[i])
         M = h_xproj.bin_center
         
-        
+        #select the region to fit
         minimum = 0.90
-        maximum = 1.04
+        maximum = 1.02
         sel  = (minimum < h_xproj.bin_center) & (h_xproj.bin_center < maximum)
         
         

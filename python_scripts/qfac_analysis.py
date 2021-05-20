@@ -13,36 +13,44 @@ import class_fit as cf
 
 #%%
 
-d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/selected_events_17.npz')
+d = np.load('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/gluexI.npz')
 
-event_num = d['event_num']
-kinfit_CL = d['kinfit_CL']
-chisq_ndf = d['chisq_ndf']
-num_combos = d['num_combos']
-combo_number = d['combo_number']
+#event_num = d['event_num']
+#kinfit_CL = d['kinfit_CL']
+#chisq_ndf = d['chisq_ndf']
+#num_combos = d['num_combos']
+#combo_number = d['combo_number']
+
+
 mpi0 = d['mpi0']
 meta = d['meta']
 metap = d['metap']
 
 metappi0 = d['metappi0']
-
-mpi013 = d['mpi013']
-mpi024 = d['mpi024']
-mpi014 = d['mpi014']
-mpi023 = d['mpi023']
-
-mant = d['mant']
-num_unusedshowers = d['num_unusedshowers']
-
-mpipp = d['mpipp']
-mpi0p = d['mpi0p']
-mpippimpi0 = d['mpippimpi0']
-
-cost_pi0 = d['cost_pi0']
-pi0phiGJ = d['pi0phiGJ']
-
 cost_etap = d['cost_etap']
-etaprimephiGJ = d['etaprimephiGJ']
+
+#problems encountered during fitting with float32 so convert to float64
+mpi0 = mpi0.astype('float64')
+meta = meta.astype('float64')
+metap = metap.astype('float64')
+
+#mpi013 = d['mpi013']
+#mpi024 = d['mpi024']
+#mpi014 = d['mpi014']
+#mpi023 = d['mpi023']
+
+#mant = d['mant']
+#num_unusedshowers = d['num_unusedshowers']
+
+#mpipp = d['mpipp']
+#mpi0p = d['mpi0p']
+#mpippimpi0 = d['mpippimpi0']
+
+#cost_pi0 = d['cost_pi0']
+#pi0phiGJ = d['pi0phiGJ']
+
+
+#etaprimephiGJ = d['etaprimephiGJ']
 
 #%%
 mep_bins = 18 # bins etaprime invariant mass
@@ -127,7 +135,7 @@ A_fit.A.set(A_value.max())
 A_fit.x0.set(0.1365)
 A_fit.sigma.set(0.004)
 A_fit.b0.set(0.8)
-A_fit.db0.set(0.0)
+A_fit.db0.set(0.1)
 A_fit.c0.set(50.)
 
 #set bounds for  combined gaussian linear fit 
@@ -135,7 +143,7 @@ A_fit.A_min.set(100.); A_fit.A_max.set(3000.)
 A_fit.x0_min.set(0.13); A_fit.x0_max.set(0.14)
 A_fit.sigma_min.set(0.003); A_fit.sigma_max.set(0.03)
 
-A_fit.b0_min.set(0.5); A_fit.b0_max.set(1.0)
+A_fit.b0_min.set(0.5); A_fit.b0_max.set(0.9)
 A_fit.c0_min.set(45.); A_fit.c0_max.set(70.)
 
 A_fit.fit_gaussbt(pi0m, A_value, A_err) # fit gauss peak with linear bkg
@@ -174,7 +182,9 @@ def bkg_fit(x,y): # x as etaprime mass and y as pi0mass
     
     f = cf.gauss_fit()
     f.b0.set(pB0.poly(y))
-    f.db0.set(0.50)
+    f.db0.set(0.5) #  this should match f db0 value not A_fit db0 value
+    f.m0.set(0.87)
+    f.m1.set(1.05)
     f.c0.set(pC0.poly(y))
     Y = f.bt_bkg(x)
     return   Y
@@ -208,12 +218,16 @@ qb = 1-q
 
 #%%
 
+#sel = (mep_min < metap) & (metap < mep_max)
+#meta = meta[sel]
+#qs_for_eta = qs[sel]
 he_ws2d = B.histo(meta, bins = 24, weights = qs, title = '$\eta$' , xlabel = 'M($\gamma\gamma$)')
 he = B.histo(meta, bins = 24)
 plt.figure()
 
 he_ws2d.show_fit_list()
-he_ws2d.set_fit_list(['A', 'mean', 'sigma', 'b0', 'b1', 'b2'])
+he_ws2d.set_fit_list(fit = ['A', 'mean', 'sigma', 'b0', 'b1', 'b2'])
+
 he_ws2d.fit()
 he_ws2d.plot_exp()
 
@@ -251,7 +265,7 @@ plt.figure();he.plot_exp(); hse.plot_exp();  he_ws2d.plot_exp()
 # for etaprime mass
 hb_ep = B.histo(metap, range = (mep_min, mep_max),  bins = 24, weights = qb, title = "bkg $\eta'$",
                xlabel = "$M(\pi^{+}\pi^{-}\eta)$")
-hs_ep = B.histo(metap, range = (mep_min, mep_max), bins = 24, weights = qs*qse, title = "signal $\eta'$",
+hs_ep = B.histo(metap, range = (mep_min, mep_max), bins = 24, weights = qs, title = "signal $\eta'$",
                xlabel = "$M(\pi^{+}\pi^{-}\eta)$")
 ht_ep = B.histo(metap, range = (mep_min, mep_max), bins = 24, title = 'Non-weighted',
                xlabel = "$M(\pi^{+}\pi^{-}\eta)$")
@@ -273,7 +287,7 @@ hb_p.plot_exp();hs_p.plot_exp();ht_p.plot_exp()
 #%%
 #get histograms (2D) etaprime vs pi0mass
 hs2 = B.histo2d(metap, mpi0, range = [[mep_min, mep_max], [mp_min, mp_max]],
-                bins = (24, 24), title = 'Invariant Mass in 2D for Signal events', weights = qs*qse, 
+                bins = (24, 24), title = 'Invariant Mass in 2D for Signal events', weights = qs, 
                 xlabel = "$M(\pi^{+}\pi^{-}\eta)$", ylabel = "$M(\gamma\gamma)$")
 
 plt.figure();hs2.plot(graph = 'surface')
@@ -294,7 +308,7 @@ plt.figure();ht2.plot(graph = 'surface')
 
 # get histograms (2D)
 h2S_GJ = B.histo2d(metappi0, cost_etap, range = [[0.9, 3.1], [-1, 1]],
-                bins = (24, 24), title = 'Angular distribution in GJ Frame Signal Response', weights = qs*qse, 
+                bins = (24, 24), title = 'Angular distribution in GJ Frame Signal Response', weights = qs, 
                 xlabel = "$M(\eta'\pi^{0})$", ylabel = "$cos\\theta_{GJ}$")
 
 plt.figure();h2S_GJ.plot()
@@ -309,7 +323,7 @@ plt.figure();h2B_GJ.plot()
 #%%
 
 # get histograms (1D) etaprimepi0 invariant mass
-hS_GJ = B.histo(metappi0, range = [0.9, 3.1], bins = 30,  weights = qs*qse, 
+hS_GJ = B.histo(metappi0, range = [0.9, 3.1], bins = 30,  weights = qs, 
                xlabel = "$M(\eta'\pi^{0})$", title = "Invariant mass of $\eta^{'}\pi^{0}$ Signal Response")
 
 plt.figure();hS_GJ.plot_exp()
@@ -339,5 +353,9 @@ plt.figure();hm.plot_exp()
 hb = h2B_GJ.project_x(range = [-1.0, -0.5])
 plt.figure();hb.plot_exp()
 
+#%%
 
+
+#qs.astype(float32)
+#np.savez('/Users/rupeshdotel/analysis/work/pi0pippimeta/data/qfactor_data/weights.npz', weights = qs)
 

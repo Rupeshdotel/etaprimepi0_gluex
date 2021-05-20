@@ -75,13 +75,13 @@ for i,x in enumerate(xsel[:]):
     fit = B.genfit(signal, [A, x0, sigma,  a0, a1],
                    x = M, y = C, y_err = dC )
     
-    if(i == 0):
-        plt.figure()
-        h.plot_exp()
-        B.plot_line(fit.xpl, fit.ypl)
-        mr = np.linspace(M[0], M[-1], 1000)
-        B.plot_line(mr, gaus(mr))
-        B.plot_line(mr, lin_bkg(mr))
+    
+    plt.figure()
+    h.plot_exp()
+    B.plot_line(fit.xpl, fit.ypl)
+    mr = np.linspace(M[0], M[-1], 1000)
+    B.plot_line(mr, gaus(mr))
+    B.plot_line(mr, lin_bkg(mr))
 
     A = B.Parameter(fit.parameters[0].value, 'A')
     x0 = B.Parameter(fit.parameters[1].value, 'x0')
@@ -92,6 +92,7 @@ for i,x in enumerate(xsel[:]):
     #sigma = fit.parameters[2].value
     #a0 = fit.parameters[3].value
     #a1 = fit.parameters[4].value
+
 
 
     ws = gaus(x)
@@ -122,7 +123,7 @@ hb.plot_exp()
 
 cost_min = -1.0
 cost_max = 1.0
-bins_cost = 4
+bins_cost = 30
 
 metappi0_min = 1.0
 metappi0_max = 2.5
